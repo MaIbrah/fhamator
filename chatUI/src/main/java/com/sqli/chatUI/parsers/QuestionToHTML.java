@@ -37,7 +37,7 @@ public class QuestionToHTML implements ResponseToHTMLParser {
             questionsHTML.add("<u style=\"vertical-align: 50%;\">Question number " + ++answerTracker + "</u>");
             questionsHTML.add("<div style=\"display: flex;\">");
             questionsHTML.add("<h4>" + question.getTitle() + " (" + question.getAnswer_count() + " Answers)</h4>");
-            questionsHTML.add("<a class=\"moreless-button\" href=\"#\" onclick=\"showThis(\'" + className + "\')\">more</a>");
+            questionsHTML.add("<a class=\"moreless-button\" id=\"moreless"+answerTracker+"\" href=\"#\" onclick=\"showThis(\'#" + className + "\',\'#moreless"+answerTracker+"\')\">More</a>");
             questionsHTML.add("</div>");
             questionsHTML.add("<div style=' display: none; ' id=\"" + className + "\" >" + question.getBody() + "</div>");
 

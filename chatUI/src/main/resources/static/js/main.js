@@ -110,11 +110,12 @@ function onMessageReceived(payload) {
         extracted(messageElement, message);
     }
 
-    let textElement = document.createElement('p');;
+    let textElement = document.createElement('p');
+    ;
     let html = message.content;
     textElement.innerHTML = html;
-        //textElement = document.createElement('p');
-       // textElement.innerHTML += "<strong style='color: #ff4743'>" + message.content + "</strong>"
+    //textElement = document.createElement('p');
+    // textElement.innerHTML += "<strong style='color: #ff4743'>" + message.content + "</strong>"
     messageElement.appendChild(textElement);
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
@@ -156,7 +157,7 @@ function upThis(id, keyWords, responseInedx) {
             contentType: "application/json"
         }).then(function (data, status, jqxhr) {
 
-            console.log(jqxhr);
+            // console.log(jqxhr);
         });
     });
 
@@ -200,9 +201,14 @@ function sendUpResponseReply(event) {
     event.preventDefault();
 }
 
-function showThis(className){
-    console.log("********makhdamach");
-    $("#"+className).slideToggle();
+function showThis(idText, idShowMore) {
+    $(idText).slideToggle();
+    if ($(idShowMore).text() == "More") {
+        $(idShowMore).text("Less")
+    } else {
+        $(idShowMore).text("More")
+    }
 }
+
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)
