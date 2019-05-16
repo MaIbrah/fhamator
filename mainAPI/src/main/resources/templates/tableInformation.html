@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<meta content="text/html" charset="UTF-8">
+<title>List of Informations</title>
+</head>
+<body>
+<div th:insert="/libs.html"/>
+<div class="row">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-xs-12 col-md-8">
+        <table>
+            <tr>
+                <td>Search:</td>
+                <td><input type="text" id="filterby"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button onclick='elasticsearch(this)' class="btn btn-primary">Search</button>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="col-xs-6 col-md-2"></div>
+</div>
+<div class="row">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-xs-12 col-md-8">
+        <a href="/InsertPage" class="btn btn-primary pull-right" role="button">Add new Information</a>
+        <table id="example" class="table table-striped table-bordered table-hover" style="width:100%">
+            <thead>
+            <tr>
+                <th class="th-sm">Type</th>
+                <th class="th-sm">Name</th>
+                <th class="th-sm">Attributes</th>
+                <th>update link</th>
+                <th>delete link</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="information : ${infos.content}" th:style="'font-weight: lighter;'">
+                <td th:text="${information.getType()}"/>
+                <td th:text="${information.getName()}"/>
+                <td>
+                    <p th:each="iterator: ${information.getAttributes()}">
+                        <a th:text="${iterator.key}"/> : <a th:text="${iterator.value}"/>
+                    </p>
+                </td>
+                <td>
+                    <a th:href="'/InformationLoad/'+${information.get_id()}">Update</a>
+                </td>
+                <td>
+                    <a href="#" onclick='deleteCall(this)' th:attr="data-el_id=${information.get_id()}">Delete</a>
+                </td>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <nav aria-label="Page navigation example pull-right">
+            <ul class="pagination pg-blue pagination-lg">
+                <li th:if="${infos.totalPages> 0}"
+                    th:each="pageNumber : ${pageNumbers}" th:class="${pageNumber==infos.number + 1} ? 'page-item disabled' : 'page-item'">
+                    <!--<a th:href="@{/InformationsPage(size=${infos.size}, page=${pageNumber})}"
+                       th:text=${pageNumber} class="page-link"></a>-->
+                    <a href="#" th:attr="data-size=${infos.size}, data-pagenumber=${pageNumber}"
+                       th:text=${pageNumber} class="page-link" onclick="nextpage(this)"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-xs-6 col-md-2"></div>
+</div>
+
+<!-- *** End: JS for DataTables. *** -->
+</body>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "paging": false,
+            "searching": false
+        });
+    });
+
+    function deleteCall(el) {
+        let id = $(el).data("el_id");
+        ajax(id, 'REST/information', 'Delete');
+    }
+
+    function nextpage(e1) {
+        let filter = $("#filterby").val();
+        let pageSize = $(e1).data("size");
+        let pageNumber = $(e1).data("pagenumber");
+        let url = location.protocol + '//' + location.host + location.pathname;
+        console.log(url);
+        window.location.href = (filter === "") ? `${url}?size=${pageSize}&page=${pageNumber}` : `${url}/${filter}?size=${pageSize}&page=${pageNumber})`;
+
+    }
+
+    function elasticsearch(e1) {
+        let filter = $("#filterby").val();
+        console.log(document.URL);
+        window.location.href = (filter === "") ? `/InformationsPage` : `/InformationsPage/${filter}`;
+    }
+
+
+</script>
+</html>

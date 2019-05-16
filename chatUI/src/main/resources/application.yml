@@ -1,0 +1,3 @@
+RestServers: http://localhost:8081/REST/
+#RestServers: http://10.242.3.136:8081/REST/
+

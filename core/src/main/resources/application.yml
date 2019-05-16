@@ -1,0 +1,13 @@
+########Host########
+#hostname: localhost
+#port: 8081
+
+########Configuration Module -chatUI-########
+RestServers: http://localhost:8081
+
+########Configuration Module -adapter-########
+
+username : mboukhenaif
+password :
+
+

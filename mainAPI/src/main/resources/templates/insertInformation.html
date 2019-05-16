@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert Information</title>
+    <style>
+        .spacer5 {
+            height: 10px;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="/libs.html"/>
+<div class="row">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-xs-12 col-md-8">
+        <form action="/InformationInsert" method="post">
+            <fieldset>
+                <legend>Information</legend>
+                <div class="row">
+                    <div class="col-xs-5 col-sm-4">Type</div>
+                    <div class="col-xs-5 col-sm-4"><input type="text" name="type" required></div>
+                    <div class="col-xs-2 col-sm-4"></div>
+                </div>
+                <div class="spacer5"></div>
+                <div class="row">
+                    <div class="col-xs-5 col-sm-4">Name</div>
+                    <div class="col-xs-5 col-sm-4"><input type="text" name="name" required></div>
+                    <div class="col-xs-2 col-sm-4"></div>
+                </div>
+                <div class="spacer5"></div>
+                <div class="row">
+                    <div class="col-xs-4 col-sm-4"></div>
+                    <div class="col-xs-53col-sm-4"><input type="button" id="addrow" value="add attributes" class="btn btn-primary"/></div>
+                    <div class="col-xs-4 col-sm-4"></div>
+                </div>
+                <div class="spacer5"></div>
+                <div class="row">
+                    <div class="col-xs-5 col-md-8">
+                        <table id="informationTable" class="table" style="font-family:'Open Sans', 'Helvetica', 'Arial';width:100%">
+                            <tr>
+                                <td style="text-align: center">Key</td>
+                                <td style="text-align: center">Value</td>
+                                <td style="text-align: center"></td>
+                            </tr>
+                        </table>
+                        <div class="col-xs-7 col-sm-4"></div>
+                    </div>
+                </div>
+                <div class="spacer5"></div>
+                <div class="row">
+                    <div class="col-xs-10 col-md-8 text-center">
+                        <input type="submit" value="Insert" style="text-align: center;width: 200px" class="btn btn-success"/>
+                    </div>
+                    <div class="col-xs-2 col-md-8"></div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="col-xs-6 col-md-2"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#addrow")
+                .on("click",
+                        function () {
+                            var newRow = $("<tr>");
+                            var cols = "";
+                            cols += '<td style="text-align: center"><input name="keys[]" required/></td>';
+                            cols += '<td style="text-align: center"><input name="values[]" required/></td>';
+                            cols += `<td style="text-align: center"><input type="button" id="ibtnDel" value="Supprimer" class="btn btn-danger"/></td>`;
+                            newRow.append(cols);
+                            $("#informationTable").append(newRow);
+
+                        });
+
+        $("#informationTable").on("click", "#ibtnDel",
+                function (event) {
+                    $(this).closest("tr").remove();
+                });
+    });
+</script>
+</body>
+</html>

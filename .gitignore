@@ -1,0 +1,57 @@
+HELP.md
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+### VS Code ###
+.vscode/
+
+### gitignore Modules ###
+##adapter##
+adapter/target/
+adapter/adapter.iml
+
+##botNLP##
+botNLP/target/
+botNLP/botNLP.iml
+
+##chatUI##
+chatUI/target/
+chatUI/chatUI.iml
+chatUI/models/Request
+chatUI/printers
+
+##core##
+core/target/
+core/core.iml
+
+##elasticsearch##
+elasticsearch/target/
+elasticsearch/elasticsearch.iml
+
+##mainAPI##
+mainAPI/target/
+mainAPI/mainAPI.iml
+

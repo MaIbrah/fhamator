@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+      <title>SQLI Chat Application</title>
+      <link rel="stylesheet" href="/css/main.css" />
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+      <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+      <script src="js/bootstrap/bootstrap.min.js"></script>
+
+
+  </head>
+  <body>
+    <noscript>
+      <h2>Sorry! Your browser doesn't support Javascript</h2>
+    </noscript>
+
+    <div id="username-page">
+        <div class="username-page-container">
+            <img src="images/fhamatorw.png" class="logo">
+          <!--  <img src="images/0.gif">-->
+            <form id="usernameForm" name="usernameForm">
+               <!-- <div class="form-group">
+                    <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
+                </div>-->
+
+            <!--    <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="username-input" id="inputGroup-sizing-lg">Username</span>
+                    </div>
+                    <input type="text" id="name"  class="form-control" style="height:70px" aria-label="Username..." aria-describedby="inputGroup-sizing-lg">
+                </div>-->
+
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="username-input" id="inputGroup-sizing-lg">Username</span>
+                    </div>
+                    <input type="text" id="name" class="form-control" style="height:70px" aria-label="Username" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="start-btn" type="submit" id="button-addon2">Start Chatting</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="chat-page" class="hidden">
+        <div class="chat-container">
+            <div class="chat-header">
+                <img src="images/fhamator.png" style="width: 10%;">
+            </div>
+            <div class="connecting">
+                Connecting...
+            </div>
+            <ul id="messageArea">
+
+            </ul>
+            <form id="messageForm" name="messageForm" nameForm="messageForm">
+                <div class="form-group">
+                    <div class="input-group clearfix">
+                        <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+                        <button type="submit" class="fas fa-play fa-2x send"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/main.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+  </body>
+</html>

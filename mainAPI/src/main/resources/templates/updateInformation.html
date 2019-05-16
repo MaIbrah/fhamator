@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Information</title>
+    <style>
+        .spacer5 {
+            height: 10px;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="/libs.html"/>
+<div class="row">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-xs-12 col-md-8">
+        <fieldset>
+            <legend>Information</legend>
+            <input type="hidden" name="id" th:value="${information.get_id()}"/>
+            <div class="row">
+                <div class="col-xs-5 col-sm-4">Type</div>
+                <div class="col-xs-5 col-sm-4"><input type="text" name="type" th:value="${information.getType()}"/></div>
+                <div class="col-xs-2 col-sm-4"></div>
+            </div>
+            <div class="spacer5"></div>
+            <div class="row">
+                <div class="col-xs-5 col-sm-4">Name</div>
+                <div class="col-xs-5 col-sm-4"><input type="text" name="name" th:value="${information.getName()}"/></div>
+                <div class="col-xs-2 col-sm-4"></div>
+            </div>
+            <div class="spacer5"></div>
+            <div class="row">
+                <div class="col-xs-4 col-sm-4"></div>
+                <div class="col-xs-53col-sm-4"><input type="button" id="addrow" value="add attributes" class="btn btn-primary"/></div>
+                <div class="col-xs-4 col-sm-4"></div>
+            </div>
+            <div class="spacer5"></div>
+            <div class="row">
+                <div class="col-xs-5 col-md-8">
+                    <table id="informationTable" class="table" style="font-family:'Open Sans', 'Helvetica', 'Arial';width:100%">
+                        <thead>
+                        <tr>
+                            <td style="text-align: center">Key</td>
+                            <td style="text-align: center">Value</td>
+                            <td style="text-align: center"></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="iterator: ${information.getAttributes()}">
+                            <td><input type="text" name="keys" th:value="${iterator.key}" required></td>
+                            <td><input type="text" name="values" th:value="${iterator.value}" required></td>
+                            <td>
+                            <td style="text-align: center"><input type="button" id="ibtnDel" value="Supprimer" class="btn btn-danger"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-xs-7 col-sm-4"></div>
+                </div>
+            </div>
+            <div class="spacer5"></div>
+            <div class="row">
+                <div class="col-xs-10 col-md-8 text-center">
+                    <input type="submit" value="Update" style="text-align: center;width: 200px" class="btn btn-success" id="update"/>
+                </div>
+                <div class="col-xs-2 col-md-8"></div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="col-xs-6 col-md-2"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#addrow")
+                .on("click",
+                        function () {
+                            var newRow = $("<tr>");
+                            var cols = "";
+                            cols += '<td style="text-align: center"><input name="keys[]" required/></td>';
+                            cols += '<td style="text-align: center"><input name="values[]" required/></td>';
+                            cols += `<td style="text-align: center"><input type="button" id="ibtnDel" value="Supprimer" class="btn btn-danger"/></td>`;
+                            newRow.append(cols);
+                            $("#informationTable").append(newRow);
+
+                        });
+
+        $("#informationTable").on("click", "#ibtnDel",
+                function (event) {
+                    $(this).closest("tr").remove();});
+
+    });
+    $("#update").click(function () {
+        let keys = [];
+        let values = [];
+        let information = $("input[name='id']").val() + ';' + $("input[name='type']").val() + ';' + $("input[name='name']").val();
+        $('input[name^="keys"]').each(function () {
+            keys.push($(this).val());
+        });
+
+        $('input[name^="values"]').each(function () {
+            values.push($(this).val());
+        });
+
+        let data = {Information: information, Keys: keys, Values: values};
+        ajaxJSON(data, 'InformationUpdate', 'put', '/InformationsPage');
+    });
+
+</script>
+</body>
+</html>
