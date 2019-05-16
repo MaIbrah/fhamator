@@ -200,5 +200,9 @@ function sendUpResponseReply(event) {
     event.preventDefault();
 }
 
+function showThis(className){
+    console.log("********makhdamach");
+    $("#"+className).slideToggle();
+}
 usernameForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)

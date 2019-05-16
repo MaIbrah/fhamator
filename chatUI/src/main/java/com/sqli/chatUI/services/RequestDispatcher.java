@@ -36,7 +36,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
             SearchInformationRequestImpl searchInformationRequest = new SearchInformationRequestImpl();
             try {
                 searchRequest = searchInformationRequest.InformationRequestParser(request).get();
-                if (true/*Domains.QUESTION.equals(searchRequest.getDomain().toLowerCase())*/) {
+                if (Domains.QUESTION.equals(searchRequest.getDomain().toLowerCase())) {
                     return searchQuestion(request);
                 } else {
                     return getResponse(searchRequest);
