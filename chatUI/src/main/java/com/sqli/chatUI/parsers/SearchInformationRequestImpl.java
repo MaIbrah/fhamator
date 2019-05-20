@@ -17,7 +17,7 @@ public class SearchInformationRequestImpl implements SearchInformationRequest {
             try {
                 RestTemplate restTemplate = new RestTemplate();
                 String url = URL + "/api/naivesBayes/domain/" + request;
-                SearchRequest searchRequest = restTemplate.getForObject(url, SearchRequest.class);
+                    SearchRequest searchRequest = restTemplate.getForObject(url, SearchRequest.class);
                 return Optional.of(searchRequest);
             } catch (Exception e) {
                 return Optional.empty();

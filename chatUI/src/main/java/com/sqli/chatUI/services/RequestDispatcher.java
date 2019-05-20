@@ -36,7 +36,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
             SearchInformationRequestImpl searchInformationRequest = new SearchInformationRequestImpl();
             try {
                 searchRequest = searchInformationRequest.InformationRequestParser(request).get();
-                if (Domains.QUESTION.equals(searchRequest.getDomain().toLowerCase())) {
+                if (Domains.STACKOVERFLOW.toString().equalsIgnoreCase(searchRequest.getDomain())) {
                     return searchQuestion(request);
                 } else {
                     return getResponse(searchRequest);
@@ -50,10 +50,8 @@ public class RequestDispatcher implements RequestDispatcherInter {
 
     private String searchQuestion(String request) throws Exception {
         RequestObject<Question> requestObject = new RequestObject<>();
-        requests.SearchRequest search =
-            new requests.SearchRequest.Builder(request).sort(Sort.RELEVANCE).order(Order.DESC).addSite(StackSite.StackOverflow).addBody().build();
+        requests.SearchRequest search =new requests.SearchRequest.Builder(request).sort(Sort.RELEVANCE).order(Order.DESC).addSite(StackSite.StackOverflow).addBody().build();
         List<Question> questions = requestObject.getObjects(search);
-        // return questions.get(0).getBody();
         ResponseToHTMLParser questionParser = new QuestionToHTML(questions.subList(0, 3));
         return questionParser.toHTML();
     }

@@ -2,5 +2,6 @@ package com.sqli.chatUI.enums;
 
 public enum Domains {
 
-    QUESTION,ACTION
+    QUESTION,ACTION,STACKOVERFLOW
+
 }

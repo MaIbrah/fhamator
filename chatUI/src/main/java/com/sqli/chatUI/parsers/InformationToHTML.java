@@ -52,6 +52,7 @@ public class InformationToHTML implements ResponseToHTMLParser{
             }
 
             informationsHTML.add(html.toString());
+            informationsHTML.add("</ul>");
         }
         informationsHTML.add("</ul>");
         informationsHTML.add("</p>");

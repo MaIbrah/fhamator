@@ -111,7 +111,6 @@ function onMessageReceived(payload) {
     }
 
     let textElement = document.createElement('p');
-    ;
     let html = message.content;
     textElement.innerHTML = html;
     //textElement = document.createElement('p');
