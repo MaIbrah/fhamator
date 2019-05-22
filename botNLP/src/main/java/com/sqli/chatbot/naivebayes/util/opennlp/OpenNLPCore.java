@@ -12,6 +12,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,21 +26,21 @@ public class OpenNLPCore implements OpenNLPService {
      * @return return an ObjectStream
      * @throws IOException
      */
-    private ObjectStream readTrainingData(String training_file_path, String charset_name) throws IOException {
+    private static ObjectStream readTrainingData(String training_file_path, String charset_name) throws IOException {
         InputStreamFactory dataIn = new MarkableFileInputStreamFactory(new File(training_file_path));
         ObjectStream lineStream = new PlainTextByLineStream(dataIn, Constant.CHARSET_NAME);
         return new DocumentSampleStream(lineStream);
     }
 
     /**
-     * *define the training parameters
+     define the training parameters
      *
      * @param iterations
      * @param cutoff
      * @param algorithm  algorithm to use to detect your domain
      * @return
      */
-    private TrainingParameters defineTrainingParameters(String iterations, String cutoff, String algorithm) {
+    private static TrainingParameters defineTrainingParameters(String iterations, String cutoff, String algorithm) {
         // define the training parameters
         TrainingParameters params = new TrainingParameters();
         params.put(TrainingParameters.ITERATIONS_PARAM, iterations);
@@ -57,11 +58,10 @@ public class OpenNLPCore implements OpenNLPService {
      * @return return Document Category Model
      * @throws IOException
      */
-    private DoccatModel createModelFromTrainingData(String language_code, ObjectStream sampleStream, TrainingParameters params) throws IOException {
+    private static DoccatModel createModelFromTrainingData(String language_code, ObjectStream sampleStream, TrainingParameters params) throws IOException {
         DoccatModel model = DocumentCategorizerME.train(language_code, sampleStream, params, new DoccatFactory());
         return model;
     }
-
 
     /**
      * save the model to local
@@ -71,7 +71,7 @@ public class OpenNLPCore implements OpenNLPService {
      * @return return docuemnt category model
      * @throws IOException
      */
-    private DoccatModel saveModelToLocal(DoccatModel model, String training_model_path) throws IOException {
+    private static DoccatModel saveModelToLocal(DoccatModel model, String training_model_path) throws IOException {
         BufferedOutputStream modelOut = new BufferedOutputStream(new FileOutputStream(training_model_path));
         model.serialize(modelOut);
         return model;
@@ -89,6 +89,7 @@ public class OpenNLPCore implements OpenNLPService {
         double[] aProbs = doccat.categorize(docWords);
         return OpenNlpResponseFactory.createOpenNlpDOmainResponse(doccat.getBestCategory(aProbs), getMaxOfDoubleArray(aProbs));
     }
+
     private List<String> testModelFileAndPredectBestKeywords(DoccatModel model, String searchQuery) {
         DocumentCategorizer doccat = new DocumentCategorizerME(model);
         String[] docWords = searchQuery.replaceAll("[^A-Za-z]", " ").split(" ");
@@ -100,7 +101,7 @@ public class OpenNLPCore implements OpenNLPService {
         for (int j = 0; j < doccat.getNumberOfCategories(); j++) {
             probs[j] = 0;
         }
-        double seuil=(1.0/(doccat.getNumberOfCategories()*2));
+        double seuil = (1.0 / (doccat.getNumberOfCategories() * 2));
         for (double prob : aProbs) {
 
             if (prob > seuil) {
@@ -108,8 +109,10 @@ public class OpenNLPCore implements OpenNLPService {
                     probs[j] = 0;
                 }
                 probs[i] = prob;
-                String keyword=doccat.getBestCategory(probs);
-                if(!results.contains(keyword)) results.add(keyword);
+                String keyword = doccat.getBestCategory(probs);
+                if (!results.contains(keyword)) {
+                    results.add(keyword);
+                }
             }
             i++;
         }
@@ -119,20 +122,37 @@ public class OpenNLPCore implements OpenNLPService {
 
     @Override
     public OpenNlpResponse getMostPredicatedResult(String training_file_path, String training_model_path, String searchQuery) throws IOException {
-        ObjectStream sampleSteam = readTrainingData(training_file_path, Constant.CHARSET_NAME);
-        TrainingParameters params = defineTrainingParameters(Constant.ITERATIONS_PARAM, Constant.CUTOFF_PARAM, Constant.ALGORITHM_PARAM);
-        DoccatModel model = createModelFromTrainingData(Constant.LANGUAGE_TRAINING_CODE, sampleSteam, params);
+        File trainingModel = Paths.get(training_model_path).toFile();
+        DoccatModel model;
+        if (trainingModel.exists()) {
+            model = new DoccatModel(trainingModel);
+        } else {
+            ObjectStream sampleSteam = readTrainingData(training_file_path, Constant.CHARSET_NAME);
+            TrainingParameters params = defineTrainingParameters(Constant.ITERATIONS_PARAM, Constant.CUTOFF_PARAM, Constant.ALGORITHM_PARAM);
+            model = createModelFromTrainingData(Constant.LANGUAGE_TRAINING_CODE, sampleSteam, params);
+        }
         model = saveModelToLocal(model, training_model_path);
         return testModelFileAndPredectBestResult(model, searchQuery);
     }
 
     @Override
     public List<String> getMostPredicatedKeywords(String training_file_path, String training_model_path, String searchQuery) throws IOException {
+        File trainingModel = Paths.get(training_model_path).toFile();
+        DoccatModel model;
+        if (trainingModel.exists()) {
+            model = new DoccatModel(trainingModel);
+        } else {
+            model= generateModel(training_file_path,training_model_path);
+        }
+        return testModelFileAndPredectBestKeywords(model, searchQuery);
+    }
+
+
+    public static DoccatModel generateModel(String training_file_path, String training_model_path) throws IOException {
         ObjectStream sampleSteam = readTrainingData(training_file_path, Constant.CHARSET_NAME);
         TrainingParameters params = defineTrainingParameters(Constant.ITERATIONS_PARAM, Constant.CUTOFF_PARAM, Constant.ALGORITHM_PARAM);
         DoccatModel model = createModelFromTrainingData(Constant.LANGUAGE_TRAINING_CODE, sampleSteam, params);
-        model = saveModelToLocal(model, training_model_path);
-        return testModelFileAndPredectBestKeywords(model, searchQuery);
+        return saveModelToLocal(model, training_model_path);
     }
 
     private double getMaxOfDoubleArray(double probs[]) {

@@ -1,8 +1,11 @@
 package com.sqli.chatbot.naivebayes.controller;
 
+import static com.sqli.chatbot.naivebayes.util.opennlp.OpenNLPCore.generateModel;
+
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesDomainService;
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesKeywordService;
 import com.sqli.chatbot.naivebayes.service.WriterTrainingDataService;
+import com.sqli.chatbot.naivebayes.util.constantes.Constant;
 import com.sqli.chatbot.naivebayes.util.dto.NoExistDomainRequest;
 import com.sqli.chatbot.naivebayes.util.dto.NoExistKeywordRequest;
 import com.sqli.chatbot.naivebayes.util.dto.SearchQueryResponse;
@@ -45,6 +48,7 @@ public class ClassificationNaiveBayesRestController {
     @PostMapping("/write/domain")
     private ResponseEntity<String> writeUnexistingDomain(@RequestBody NoExistDomainRequest request) {
         try {
+            generateModel(Constant.TRAINING_DOMAIN_FILE_PATH,Constant.TRAINING_DOMAIN_MODEL_PATH);
             return ResponseEntity.ok(writerTrainingDataService.writeDomainIfDoesntExist(request));
         } catch (IOException ex) {
             return ResponseEntity.status(301).build();
