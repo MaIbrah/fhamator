@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sqli.chatUI.enums.Domains;
+import com.sqli.chatUI.enums.ResponseCode;
 import com.sqli.chatUI.models.Information;
 import com.sqli.chatUI.models.SearchRequest;
 import com.sqli.chatUI.parsers.InformationToHTML;
@@ -14,7 +15,8 @@ import com.sqli.chatUI.parsers.ResponseToHTMLParser;
 import com.sqli.chatUI.parsers.SearchInformationRequestImpl;
 
 import constants.Order;
-import constants.Sort;
+
+import constants.SearchSort;
 import constants.StackSite;
 import generic.RequestObject;
 import models.Question;
@@ -36,6 +38,9 @@ public class RequestDispatcher implements RequestDispatcherInter {
             SearchInformationRequestImpl searchInformationRequest = new SearchInformationRequestImpl();
             try {
                 searchRequest = searchInformationRequest.InformationRequestParser(request).get();
+                if("none".equalsIgnoreCase(searchRequest.getDomain())){
+                   return ResponseCode.NO_DOMAIN_FOUND.getValue();
+                }
                 if (Domains.STACKOVERFLOW.toString().equalsIgnoreCase(searchRequest.getDomain())) {
                     return searchQuestion(request);
                 } else {
@@ -45,14 +50,14 @@ public class RequestDispatcher implements RequestDispatcherInter {
                 e.printStackTrace();
             }
         }
-        return NO_DATA_FOUND;
+        return ResponseCode.NO_DATA_FOUND.getValue();
     }
 
     private String searchQuestion(String request) throws Exception {
         RequestObject<Question> requestObject = new RequestObject<>();
-        requests.SearchRequest search =new requests.SearchRequest.Builder(request).sort(Sort.RELEVANCE).order(Order.DESC).addSite(StackSite.StackOverflow).addBody().build();
+        requests.SearchRequest search =new requests.SearchRequest.Builder(request).sort(SearchSort.RELEVANCE).order(Order.DESC).addSite(StackSite.StackOverflow).addBody().build();
         List<Question> questions = requestObject.getObjects(search);
-        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.subList(0, 3));
+        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= 3 ? questions.subList(0, 3) : questions);
         return questionParser.toHTML();
     }
 

@@ -41,9 +41,27 @@
             <div class="connecting">
                 Connecting...
             </div>
+
             <ul id="messageArea">
 
             </ul>
+            <div class="searching hidden">
+                Searching...
+            </div>
+            <div class="form-popup" id="myForm">
+                <form action="/" class="form-container">
+                    <h1>Domaine Adder</h1>
+                    <input id="request" type="hidden" value="">
+                    <label><b>Domaine</b></label>
+                    <input type="text" placeholder="Enter Domaine" id="domain" required>
+
+                    <label><b>KeyWords</b></label>
+                    <input type="text" placeholder="Enter Keywords seperated with ';'" name="keywords" >
+
+                    <button type="button" class="btn" onclick="addDomainRequest(this)">Add</button>
+                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                </form>
+            </div>
             <form id="messageForm" name="messageForm" nameForm="messageForm">
                 <div class="form-group">
                     <div class="input-group clearfix">

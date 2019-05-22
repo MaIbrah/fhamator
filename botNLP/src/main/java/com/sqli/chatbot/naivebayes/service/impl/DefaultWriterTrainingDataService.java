@@ -14,10 +14,13 @@ import java.util.List;
 
 @Service
 public class DefaultWriterTrainingDataService implements WriterTrainingDataService {
+
     @Autowired
     private ClassificationNaiveBayesDomainService domainService;
     @Autowired
     private ClassificationNaiveBayesKeywordService keywordService;
+
+
     @Override
     public String writeDomainIfDoesntExist(NoExistDomainRequest request) throws IOException {
         //File file = null;
@@ -25,7 +28,7 @@ public class DefaultWriterTrainingDataService implements WriterTrainingDataServi
 
         String domain = domainService.getDomainFromSearchQuery(request.getClientDomain());
         String result = "";
-        if (domain.contains("None")) {
+        if (domain.toLowerCase().contains("None".toLowerCase())) {
             result = request.getClientDomain() + " " + request.getSearchQuery();
             domain = request.getClientDomain();
         } else {

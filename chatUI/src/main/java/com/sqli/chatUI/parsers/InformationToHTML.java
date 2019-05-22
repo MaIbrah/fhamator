@@ -46,7 +46,7 @@ public class InformationToHTML implements ResponseToHTMLParser{
             for(Map.Entry<String, String> entry: information.getAttributes().entrySet())
             {
                 if("Details".equalsIgnoreCase(entry.getKey()))
-                    html.append("<li><strong>").append(entry.getKey()).append(" : </strong><a href=\"'").append(entry.getValue()) .append("'\">Link</a></li>");
+                    html.append("<li><strong>").append(entry.getKey()).append(" : </strong><a href=\"").append(entry.getValue()) .append("\">Link</a></li>");
                 else
                     html.append("<li><strong>").append(entry.getKey()).append(" : </strong>").append(entry.getValue()) .append("</li>");
             }

@@ -8,6 +8,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sqli.chatUI.enums.ResponseCode;
 import com.sqli.chatUI.models.ChatMessage;
 import com.sqli.chatUI.services.RequestDispatcher;
 
@@ -31,7 +32,21 @@ public class ChatController {
     @SendTo("/queue/{user}")
     public ChatMessage sendReplay(@Payload ChatMessage chatMessage, @PathVariable String user) throws InterruptedException {
         Thread.sleep(Long.parseLong("100"));
-        ChatMessage message = new ChatMessage(returnMessage(chatMessage.getContent()));
+        ChatMessage message = new ChatMessage();
+        String retournedMessage =returnMessage(chatMessage.getContent());
+
+        if (ResponseCode.NO_DOMAIN_FOUND.getValue().equalsIgnoreCase(retournedMessage)){
+            message.setContent(chatMessage.getContent());
+            message.setType(ChatMessage.MessageType.ADD_DOMAIN);
+        }
+        else if(ResponseCode.NO_DATA_FOUND.getValue().equalsIgnoreCase(retournedMessage)) {
+            message.setContent(ResponseCode.NO_DATA_FOUND.getValue());
+            message.setType(ChatMessage.MessageType.CHAT);
+        }
+        else{
+            message.setContent(retournedMessage);
+            message.setType(ChatMessage.MessageType.CHAT);
+        }
         message.setSender("BOT");
         messagingTemplate.convertAndSend("/topic/"+chatMessage.getSender(),message);
         return chatMessage;
