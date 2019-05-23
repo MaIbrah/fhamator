@@ -1,5 +1,7 @@
 package com.sqli.chatbot.naivebayes.service.impl;
 
+import static com.sqli.chatbot.naivebayes.util.opennlp.OpenNLPCore.generateModel;
+
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesDomainService;
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesKeywordService;
 import com.sqli.chatbot.naivebayes.service.WriterTrainingDataService;
@@ -35,6 +37,7 @@ public class DefaultWriterTrainingDataService implements WriterTrainingDataServi
             result = domain + " " + request.getSearchQuery();
         }
         domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_DOMAIN_FILE_PATH, result);
+        generateModel(Constant.TRAINING_DOMAIN_FILE_PATH,Constant.TRAINING_DOMAIN_MODEL_PATH);
         return domain;
     }
 

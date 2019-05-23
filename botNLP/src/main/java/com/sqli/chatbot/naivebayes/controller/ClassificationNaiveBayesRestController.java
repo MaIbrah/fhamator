@@ -1,23 +1,26 @@
 package com.sqli.chatbot.naivebayes.controller;
 
-import static com.sqli.chatbot.naivebayes.util.opennlp.OpenNLPCore.generateModel;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesDomainService;
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesKeywordService;
 import com.sqli.chatbot.naivebayes.service.WriterTrainingDataService;
-import com.sqli.chatbot.naivebayes.util.constantes.Constant;
 import com.sqli.chatbot.naivebayes.util.dto.NoExistDomainRequest;
 import com.sqli.chatbot.naivebayes.util.dto.NoExistKeywordRequest;
 import com.sqli.chatbot.naivebayes.util.dto.SearchQueryResponse;
 import com.sqli.chatbot.naivebayes.util.factory.SearchQueryResponseFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.html.parser.Entity;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/naivesBayes")
@@ -48,7 +51,6 @@ public class ClassificationNaiveBayesRestController {
     @PostMapping("/write/domain")
     private ResponseEntity<String> writeUnexistingDomain(@RequestBody NoExistDomainRequest request) {
         try {
-            generateModel(Constant.TRAINING_DOMAIN_FILE_PATH,Constant.TRAINING_DOMAIN_MODEL_PATH);
             return ResponseEntity.ok(writerTrainingDataService.writeDomainIfDoesntExist(request));
         } catch (IOException ex) {
             return ResponseEntity.status(301).build();

@@ -147,7 +147,8 @@ function addDomainRequest() {
               message.content = message.sender + ' add Domaine! '+ message.content;
               console.log(message.content);*/
             var searchRequest = message.content;
-            message.content = "No domain found, to add a domain for your request Click on the button";
+            //message.content = "No domain found, to add a domain for your request Click on the button";
+            message.content = "Sorry I could'nt understand you, would you be kind enough and fill the form so I can help you next time";
             message.content += "<button id='" + (responseIndex) + "' class='fas fa-ellipsis-h fa-2x' style='color: #068dd0; background: none;' onclick='openForm(" + (responseIndex++) + ",\"" + searchRequest + "\")'></button>"
             extracted(messageElement, message);
         } else {
