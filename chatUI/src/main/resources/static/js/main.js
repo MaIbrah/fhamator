@@ -101,12 +101,44 @@ function extracted(messageElement, message) {
     messageElement.appendChild(usernameElement);
 }
 
-function addDomainRequest() {
+function addDomainAndKeywordsRequest() {
 
+    addDomain(document.getElementById("request").value,document.getElementById("domain").value);
+    addKeyword(document.getElementById("keywords").value);
+    document.getElementById("myForm").style.display = "none";
+    document.getElementById("domain").value ="";
+    if (idAddButton != null){
+        document.getElementById(idAddButton).disabled = true;
+        document.getElementById(idAddButton).style.color="silver";
+    }
+}
+
+function addDomain(searchQuery,clientDomain) {
     var url = "/api/naivesBayes/write/domain";
     var data = {
-        "searchQuery": document.getElementById("request").value,
-        "clientDomain": document.getElementById("domain").value
+        "searchQuery":searchQuery ,
+        "clientDomain":clientDomain
+    };
+
+    $(document).ready(function () {
+        $.ajax({
+            url: url,
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: "application/json",
+            complete: function (response) { // code_html contient le HTML renvoyé
+            }
+        });
+
+    });
+}
+
+
+function addKeyword(clientKeywords) {
+    var url = "/api/naivesBayes/write/keyword";
+    var data = {
+        "clientKeywords":clientKeywords
     };
 
     $(document).ready(function () {
@@ -118,18 +150,13 @@ function addDomainRequest() {
             contentType: "application/json",
             complete: function (response) { // code_html contient le HTML renvoyé
 
-                document.getElementById("myForm").style.display = "none";
-                document.getElementById("domain").value ="";
-                if (idAddButton != null){
-                    document.getElementById(idAddButton).disabled = true;
-                    document.getElementById(idAddButton).style.color="silver";
-                }
             }
         });
 
     });
-
 }
+
+
 
     function onMessageReceived(payload) {
         var message = JSON.parse(payload.body);
@@ -147,8 +174,7 @@ function addDomainRequest() {
               message.content = message.sender + ' add Domaine! '+ message.content;
               console.log(message.content);*/
             var searchRequest = message.content;
-            //message.content = "No domain found, to add a domain for your request Click on the button";
-            message.content = "Sorry I could'nt understand you, would you be kind enough and fill the form so I can help you next time";
+            message.content = "No domain found, to add a domain for your request Click on the button";
             message.content += "<button id='" + (responseIndex) + "' class='fas fa-ellipsis-h fa-2x' style='color: #068dd0; background: none;' onclick='openForm(" + (responseIndex++) + ",\"" + searchRequest + "\")'></button>"
             extracted(messageElement, message);
         } else {

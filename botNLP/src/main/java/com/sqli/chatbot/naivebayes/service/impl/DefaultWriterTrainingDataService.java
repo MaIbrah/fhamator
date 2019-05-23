@@ -4,6 +4,7 @@ import static com.sqli.chatbot.naivebayes.util.opennlp.OpenNLPCore.generateModel
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ public class DefaultWriterTrainingDataService implements WriterTrainingDataServi
     @Autowired
     private ClassificationNaiveBayesKeywordService keywordService;
 
-
     @Override
     public String writeDomainIfDoesntExist(NoExistDomainRequest request) throws IOException {
         //File file = null;
@@ -40,31 +40,22 @@ public class DefaultWriterTrainingDataService implements WriterTrainingDataServi
             result = domain + " " + request.getSearchQuery();
         }
         domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_DOMAIN_FILE_PATH, result);
-        generateModel(Constant.TRAINING_DOMAIN_FILE_PATH,Constant.TRAINING_DOMAIN_MODEL_PATH);
+        generateModel(Constant.TRAINING_DOMAIN_FILE_PATH, Constant.TRAINING_DOMAIN_MODEL_PATH);
         return domain;
     }
 
     @Override
     public String writeKeywordIfDoesntExist(NoExistKeywordRequest request) throws IOException {
         //File file = null;
-         DomainOrKeywordWriter domainOrKeywordWriter = new DomainOrKeywordWriter();
-         String keywords = String.join(" ",request.getClientKeywords());
-         String keyword = keywordService.getMostPredicatedKeywordFromSearchQuery(keywords);
-         List<String> keyWordsToADD = new ArrayList<>();
-         if (keyword.toLowerCase().contains("none")) {
-            request.getClientKeywords().forEach(k -> keyWordsToADD.add(k + " " + k));
-         } else {
-            keyWordsToADD.add(keyword + " " + keyword);
-         }
-         keyWordsToADD.forEach( k -> {
-            try {
-                domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_KEYWORD_FILE_PATH, k);
-            } catch (IOException e) {
-                e.printStackTrace();
+        DomainOrKeywordWriter domainOrKeywordWriter = new DomainOrKeywordWriter();
+        List<String> keywords = Arrays.asList(request.getClientKeywords().split(","));
+        for (String keyword : keywords) {
+            String keywordFinder = keywordService.getMostPredicatedKeywordFromSearchQuery(keyword);
+            if (keywordFinder.toLowerCase().contains("none")) {
+                domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_KEYWORD_FILE_PATH, keyword + " " + keyword);
             }
-         });
-        generateModel(Constant.TRAINING_KEYWORD_FILE_PATH,Constant.TRAINING_KEYWORD_MODEL_PATH);
-         return keywords;
+            generateModel(Constant.TRAINING_KEYWORD_FILE_PATH, Constant.TRAINING_KEYWORD_MODEL_PATH);
+        }
+        return String.join(" ", keywords);
     }
-
 }
