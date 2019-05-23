@@ -83,14 +83,14 @@ public class OpenNLPCore implements OpenNLPService {
      * @param searchQuery entered search query
      * @return the most probably predicated result
      */
-    private OpenNlpResponse testModelFileAndPredectBestResult(DoccatModel model, String searchQuery) {
+    private OpenNlpResponse testModelFileAndPredictBestResult(DoccatModel model, String searchQuery) {
         DocumentCategorizer doccat = new DocumentCategorizerME(model);
         String[] docWords = searchQuery.replaceAll("[^A-Za-z]", " ").split(" ");
         double[] aProbs = doccat.categorize(docWords);
         return OpenNlpResponseFactory.createOpenNlpDOmainResponse(doccat.getBestCategory(aProbs), getMaxOfDoubleArray(aProbs));
     }
 
-    private List<String> testModelFileAndPredectBestKeywords(DoccatModel model, String searchQuery) {
+    private List<String> testModelFileAndPredictBestKeywords(DoccatModel model, String searchQuery) {
         DocumentCategorizer doccat = new DocumentCategorizerME(model);
         String[] docWords = searchQuery.replaceAll("[^A-Za-z]", " ").split(" ");
         double[] aProbs = doccat.categorize(docWords);
@@ -132,7 +132,7 @@ public class OpenNLPCore implements OpenNLPService {
             model = createModelFromTrainingData(Constant.LANGUAGE_TRAINING_CODE, sampleSteam, params);
         }
         model = saveModelToLocal(model, training_model_path);
-        return testModelFileAndPredectBestResult(model, searchQuery);
+        return testModelFileAndPredictBestResult(model, searchQuery);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class OpenNLPCore implements OpenNLPService {
         } else {
             model= generateModel(training_file_path,training_model_path);
         }
-        return testModelFileAndPredectBestKeywords(model, searchQuery);
+        return testModelFileAndPredictBestKeywords(model, searchQuery);
     }
 
 

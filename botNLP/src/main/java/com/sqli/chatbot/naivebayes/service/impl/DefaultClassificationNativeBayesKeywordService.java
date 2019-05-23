@@ -31,6 +31,6 @@ public class DefaultClassificationNativeBayesKeywordService implements Classific
 
     private String geBestKeyword(OpenNlpResponse nlpResponse) {
 //        return nlpResponse.getProb() > 0.7 ? nlpResponse.getPredicatedResponse()+" "+nlpResponse.getProb() : "None" + nlpResponse.getProb();
-        return nlpResponse.getProb() > 0.4 ? nlpResponse.getPredicatedResponse(): "None" ;
+        return nlpResponse.getProb() > 0.4 ? nlpResponse.getPredicatedResponse(): "none" ;
     }
 }

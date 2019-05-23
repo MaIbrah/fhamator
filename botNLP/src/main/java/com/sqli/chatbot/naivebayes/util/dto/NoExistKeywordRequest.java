@@ -1,30 +1,22 @@
 package com.sqli.chatbot.naivebayes.util.dto;
 
-public class NoExistKeywordRequest {
-    private String searchQuery;
-    private String clientKeyword;
+import java.util.List;
 
-    public NoExistKeywordRequest(String searchQuery, String clientKeyword) {
-        this.searchQuery = searchQuery;
-        this.clientKeyword = clientKeyword;
+public class NoExistKeywordRequest {
+    private List<String> clientKeywords;
+
+    public NoExistKeywordRequest(List<String> clientKeywords) {
+        this.clientKeywords = clientKeywords;
     }
 
     public NoExistKeywordRequest() {
     }
 
-    public String getSearchQuery() {
-        return searchQuery;
+    public List<String> getClientKeywords() {
+        return clientKeywords;
     }
 
-    public void setSearchQuery(String searchQuery) {
-        this.searchQuery = searchQuery;
-    }
-
-    public String getClientKeyword() {
-        return clientKeyword;
-    }
-
-    public void setClientKeyword(String clientKeyword) {
-        this.clientKeyword = clientKeyword;
+    public void setClientKeywords(List<String> clientKeywords) {
+        this.clientKeywords = clientKeywords;
     }
 }

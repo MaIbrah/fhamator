@@ -1,5 +1,7 @@
 package com.sqli.chatbot.naivebayes;
 
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +13,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class NaivebayesApplicationTests {
 
     @Test
-    public void contextLoads() {
+    public void contextLoads() throws IOException {
         Assert.assertTrue(true);
     }
+
 
 }
