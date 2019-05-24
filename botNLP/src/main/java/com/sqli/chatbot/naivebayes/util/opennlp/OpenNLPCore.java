@@ -122,34 +122,22 @@ public class OpenNLPCore implements OpenNLPService {
 
     @Override
     public OpenNlpResponse getMostPredicatedResult(String training_file_path, String training_model_path, String searchQuery) throws IOException {
-        File trainingModel = Paths.get(training_model_path).toFile();
-        DoccatModel model;
-        if (trainingModel.exists()) {
-            model = new DoccatModel(trainingModel);
-        } else {
-            ObjectStream sampleSteam = readTrainingData(training_file_path, Constant.CHARSET_NAME);
-            TrainingParameters params = defineTrainingParameters(Constant.ITERATIONS_PARAM, Constant.CUTOFF_PARAM, Constant.ALGORITHM_PARAM);
-            model = createModelFromTrainingData(Constant.LANGUAGE_TRAINING_CODE, sampleSteam, params);
-        }
-        model = saveModelToLocal(model, training_model_path);
+        DoccatModel model = loadOrGenerateModel(training_file_path,training_model_path);
         return testModelFileAndPredictBestResult(model, searchQuery);
     }
 
     @Override
     public List<String> getMostPredicatedKeywords(String training_file_path, String training_model_path, String searchQuery) throws IOException {
-        File trainingModel = Paths.get(training_model_path).toFile();
-        DoccatModel model;
-        if (trainingModel.exists()) {
-            model = new DoccatModel(trainingModel);
-        } else {
-            model= generateModel(training_file_path,training_model_path);
-        }
+        DoccatModel model = loadOrGenerateModel(training_file_path,training_model_path);
         return testModelFileAndPredictBestKeywords(model, searchQuery);
     }
 
-
+public DoccatModel loadOrGenerateModel(String training_file_path, String training_model_path) throws IOException {
+    File trainingModel = Paths.get(training_model_path).toFile();
+    return trainingModel.exists() ? new DoccatModel(trainingModel) : generateModel(training_file_path,training_model_path);
+}
     public static DoccatModel generateModel(String training_file_path, String training_model_path) throws IOException {
-        new File("model").mkdir();
+        new File("botNLP/model").mkdir();
         ObjectStream sampleSteam = readTrainingData(training_file_path, Constant.CHARSET_NAME);
         TrainingParameters params = defineTrainingParameters(Constant.ITERATIONS_PARAM, Constant.CUTOFF_PARAM, Constant.ALGORITHM_PARAM);
         DoccatModel model = createModelFromTrainingData(Constant.LANGUAGE_TRAINING_CODE, sampleSteam, params);
