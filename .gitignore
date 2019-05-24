@@ -36,6 +36,8 @@ adapter/adapter.iml
 ##botNLP##
 botNLP/target/
 botNLP/botNLP.iml
+botNLP/model/en-ner-domain.bin
+botNLP/model/en-ner-keyword.bin
 
 ##chatUI##
 chatUI/target/
