@@ -149,6 +149,7 @@ public class OpenNLPCore implements OpenNLPService {
 
 
     public static DoccatModel generateModel(String training_file_path, String training_model_path) throws IOException {
+        new File("model").mkdir();
         ObjectStream sampleSteam = readTrainingData(training_file_path, Constant.CHARSET_NAME);
         TrainingParameters params = defineTrainingParameters(Constant.ITERATIONS_PARAM, Constant.CUTOFF_PARAM, Constant.ALGORITHM_PARAM);
         DoccatModel model = createModelFromTrainingData(Constant.LANGUAGE_TRAINING_CODE, sampleSteam, params);
