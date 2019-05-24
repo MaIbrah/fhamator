@@ -48,14 +48,15 @@ public class DefaultWriterTrainingDataService implements WriterTrainingDataServi
     public String writeKeywordIfDoesntExist(NoExistKeywordRequest request) throws IOException {
         //File file = null;
         DomainOrKeywordWriter domainOrKeywordWriter = new DomainOrKeywordWriter();
-        List<String> keywords = Arrays.asList(request.getClientKeywords().split(","));
+        List<String> keywords = Arrays.asList(request.getClientKeywords().trim().split(","));
         for (String keyword : keywords) {
             String keywordFinder = keywordService.getMostPredicatedKeywordFromSearchQuery(keyword);
             if (keywordFinder.toLowerCase().contains("none")) {
                 domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_KEYWORD_FILE_PATH, keyword + " " + keyword);
             }
-            generateModel(Constant.TRAINING_KEYWORD_FILE_PATH, Constant.TRAINING_KEYWORD_MODEL_PATH);
+
         }
+        generateModel(Constant.TRAINING_KEYWORD_FILE_PATH, Constant.TRAINING_KEYWORD_MODEL_PATH);
         return String.join(" ", keywords);
     }
 }

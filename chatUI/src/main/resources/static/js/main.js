@@ -15,7 +15,7 @@ var stompClient = null;
 var username = null;
 
 var Searching = false;
-var idAddButton=null;
+var idAddButton = null;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -89,7 +89,13 @@ function extracted(messageElement, message) {
     messageElement.classList.add('chat-message');
 
     var avatarElement = document.createElement('i');
-    var avatarText = document.createTextNode(message.sender[0] + message.sender[1]);
+    if (message.sender === "BOT") {
+        var avatarText = document.createElement("img");
+        avatarText.src = "/images/robot-icon.png";
+        avatarText.style="width : 42px";
+    } else {
+        var avatarText = document.createTextNode(message.sender[0] + message.sender[1]);
+    }
     avatarElement.appendChild(avatarText);
     avatarElement.style['background-color'] = getAvatarColor(message.sender);
 
@@ -103,21 +109,25 @@ function extracted(messageElement, message) {
 
 function addDomainAndKeywordsRequest() {
 
-    addDomain(document.getElementById("request").value,document.getElementById("domain").value);
-    addKeyword(document.getElementById("keywords").value);
+    addDomain(document.getElementById("request").value, document.getElementById("domain").value);
+    var keys =document.getElementById("keywords").value;
+    if (keys!= "")
+        addKeyword(keys);
     document.getElementById("myForm").style.display = "none";
-    document.getElementById("domain").value ="";
-    if (idAddButton != null){
+    document.getElementById("domain").value = "";
+    if (idAddButton != null) {
         document.getElementById(idAddButton).disabled = true;
-        document.getElementById(idAddButton).style.color="silver";
+        document.getElementById(idAddButton).style.color = "silver";
     }
+    document.getElementById("message").disabled = false;
+    sendUpResponseReply(event,'Thank you for contributing!');
 }
 
-function addDomain(searchQuery,clientDomain) {
+function addDomain(searchQuery, clientDomain) {
     var url = "/api/naivesBayes/write/domain";
     var data = {
-        "searchQuery":searchQuery ,
-        "clientDomain":clientDomain
+        "searchQuery": searchQuery,
+        "clientDomain": clientDomain
     };
 
     $(document).ready(function () {
@@ -133,12 +143,11 @@ function addDomain(searchQuery,clientDomain) {
 
     });
 }
-
 
 function addKeyword(clientKeywords) {
     var url = "/api/naivesBayes/write/keyword";
     var data = {
-        "clientKeywords":clientKeywords
+        "clientKeywords": clientKeywords
     };
 
     $(document).ready(function () {
@@ -156,139 +165,141 @@ function addKeyword(clientKeywords) {
     });
 }
 
+function onMessageReceived(payload) {
+    var message = JSON.parse(payload.body);
 
+    var messageElement = document.createElement('li');
 
-    function onMessageReceived(payload) {
-        var message = JSON.parse(payload.body);
-
-        var messageElement = document.createElement('li');
-
-        if (message.type === 'JOIN') {
-            messageElement.classList.add('event-message');
-            message.content = message.sender + ' joined!';
-        } else if (message.type === 'LEAVE') {
-            messageElement.classList.add('event-message');
-            message.content = message.sender + ' left!';
-        } else if (message.type === 'ADD_DOMAIN') {
-            /*  messageElement.classList.add('event-message');
-              message.content = message.sender + ' add Domaine! '+ message.content;
-              console.log(message.content);*/
-            var searchRequest = message.content;
-            message.content = "No domain found, to add a domain for your request Click on the button";
-            message.content += "<button id='" + (responseIndex) + "' class='fas fa-ellipsis-h fa-2x' style='color: #068dd0; background: none;' onclick='openForm(" + (responseIndex++) + ",\"" + searchRequest + "\")'></button>"
-            extracted(messageElement, message);
-        } else {
-            extracted(messageElement, message);
-        }
-
-        Searching = false;
-        searchingElement.classList.add('hidden');
-        let textElement = document.createElement('p');
-        let html = message.content;
-        textElement.innerHTML = html;
-        messageElement.appendChild(textElement);
-        messageArea.appendChild(messageElement);
-        messageArea.scrollTop = messageArea.scrollHeight;
+    if (message.type === 'JOIN') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' joined!';
+    } else if (message.type === 'LEAVE') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' left!';
+    } else if (message.type === 'ADD_DOMAIN') {
+        /*  messageElement.classList.add('event-message');
+          message.content = message.sender + ' add Domaine! '+ message.content;
+          console.log(message.content);*/
+        var searchRequest = message.content;
+        message.content = "I couldn't  understand you, can you please fill the form so I can help you next time";
+        message.content += "<button id='" + (responseIndex) + "' class='fas fa-ellipsis-h fa-2x' style='color: #068dd0; background: none;' onclick='openForm(" + (responseIndex++) + ",\"" + searchRequest + "\")'></button>"
+        extracted(messageElement, message);
+    } else {
+        extracted(messageElement, message);
     }
 
-    function openForm(id, searchRequest) {
-        idAddButton=id;
-        document.getElementById("request").value = searchRequest;
-        document.getElementById("myForm").style.display = "block";
+    Searching = false;
+    searchingElement.classList.add('hidden');
+    let textElement = document.createElement('p');
+    let html = message.content;
+    textElement.innerHTML = html;
+    messageElement.appendChild(textElement);
+    messageArea.appendChild(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+function openForm(id, searchRequest) {
+    idAddButton = id;
+    document.getElementById("request").value = searchRequest;
+    document.getElementById("myForm").style.display = "block";
+    document.getElementById("message").value = "";
+    document.getElementById("message").disabled = true;
+}
+
+function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+    document.getElementById("message").disabled = false;
+
+}
+
+function showResponse(index) {
+    console.log("click!!")
+    var disp = document.getElementById("reponses" + index).style.display;
+    var className = document.getElementById("showResponseButton" + index).className;
+    if (disp == "none") {
+        disp = "unset";
+        className = "fas fa-chevron-circle-up fa-3x chervon-up";
+    } else {
+        disp = "none";
+        className = "fas fa-chevron-circle-down fa-3x chervon-up";
     }
+    document.getElementById("reponses" + index).style.display = disp;
+    document.getElementById("showResponseButton" + index).className = className;
 
-    function closeForm() {
-        document.getElementById("myForm").style.display = "none";
+}
+
+function upThis(id, keyWords, responseInedx) {
+    console.log("->" + id);
+    console.log(keyWords);
+    var url = "/REST/elasticsearch/keywords";
+    var data = {
+        "id": id,
+        "keyWords": [
+            keyWords
+        ]
+    };
+
+    $(document).ready(function () {
+        $.ajax({
+            url: url,
+            type: "put",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: "application/json"
+        }).then(function (data, status, jqxhr) {
+
+            // console.log(jqxhr);
+        });
+    });
+
+    document.getElementById("upResponse" + responseInedx.valueOf()).style.pointerEvents = "none";
+    document.getElementById("upResponse" + responseInedx.valueOf()).style.color = "#e0e0e0";
+}
+
+function getAvatarColor(messageSender) {
+    var hash = 0;
+    for (var i = 0; i < messageSender.length; i++) {
+        hash = 31 * hash + messageSender.charCodeAt(i);
     }
+    var index = Math.abs(hash % colors.length);
+    return colors[index];
+}
 
-    function showResponse(index) {
-        console.log("click!!")
-        var disp = document.getElementById("reponses" + index).style.display;
-        var className = document.getElementById("showResponseButton" + index).className;
-        if (disp == "none") {
-            disp = "unset";
-            className = "fas fa-chevron-circle-up fa-3x chervon-up";
-        } else {
-            disp = "none";
-            className = "fas fa-chevron-circle-down fa-3x chervon-up";
-        }
-        document.getElementById("reponses" + index).style.display = disp;
-        document.getElementById("showResponseButton" + index).className = className;
+function sendUpResponseReply(event,message) {
 
-    }
-
-    function upThis(id, keyWords, responseInedx) {
-        console.log("->" + id);
-        console.log(keyWords);
-        var url = "/REST/elasticsearch/keywords";
-        var data = {
-            "id": id,
-            "keyWords": [
-                keyWords
-            ]
+    if (stompClient) {
+        var chatMessage = {
+            sender: 'BOT',
+            content: message ,
+            type: 'CHAT'
         };
 
-        $(document).ready(function () {
-            $.ajax({
-                url: url,
-                type: "put",
-                data: JSON.stringify(data),
-                dataType: 'json',
-                contentType: "application/json"
-            }).then(function (data, status, jqxhr) {
+        var messageElement = document.createElement('li');
+        extracted(messageElement, chatMessage);
+        //stompClient.send("/app/"+username+"/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        var textElement = document.createElement('p');
+        var messageText = document.createTextNode(chatMessage.content);
+        textElement.appendChild(messageText);
 
-                // console.log(jqxhr);
-            });
-        });
+        messageElement.appendChild(textElement);
 
-        document.getElementById("upResponse" + responseInedx.valueOf()).style.pointerEvents = "none";
-        document.getElementById("upResponse" + responseInedx.valueOf()).style.color = "#e0e0e0";
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
+
+        stompClient.send("/app/" + username + "/chat.sendReplyMessage", {}, JSON.stringify(chatMessage));
+        messageInput.value = '';
     }
+    event.preventDefault();
+}
 
-    function getAvatarColor(messageSender) {
-        var hash = 0;
-        for (var i = 0; i < messageSender.length; i++) {
-            hash = 31 * hash + messageSender.charCodeAt(i);
-        }
-        var index = Math.abs(hash % colors.length);
-        return colors[index];
+function showThis(idText, idShowMore) {
+    $(idText).slideToggle();
+    if ($(idShowMore).text() == "More") {
+        $(idShowMore).text("Less")
+    } else {
+        $(idShowMore).text("More")
     }
+}
 
-    function sendUpResponseReply(event) {
-
-        if (stompClient) {
-            var chatMessage = {
-                sender: 'BOT',
-                content: 'OKK',
-                type: 'CHAT'
-            };
-
-            var messageElement = document.createElement('li');
-            extracted(messageElement, chatMessage);
-            //stompClient.send("/app/"+username+"/chat.sendMessage", {}, JSON.stringify(chatMessage));
-            var textElement = document.createElement('p');
-            var messageText = document.createTextNode(chatMessage.content);
-            textElement.appendChild(messageText);
-
-            messageElement.appendChild(textElement);
-
-            messageArea.appendChild(messageElement);
-            messageArea.scrollTop = messageArea.scrollHeight;
-
-            stompClient.send("/app/" + username + "/chat.sendReplyMessage", {}, JSON.stringify(chatMessage));
-            messageInput.value = '';
-        }
-        event.preventDefault();
-    }
-
-    function showThis(idText, idShowMore) {
-        $(idText).slideToggle();
-        if ($(idShowMore).text() == "More") {
-            $(idShowMore).text("Less")
-        } else {
-            $(idShowMore).text("More")
-        }
-    }
-
-    usernameForm.addEventListener('submit', connect, true);
-    messageForm.addEventListener('submit', sendMessage, true);
+usernameForm.addEventListener('submit', connect, true);
+messageForm.addEventListener('submit', sendMessage, true);
