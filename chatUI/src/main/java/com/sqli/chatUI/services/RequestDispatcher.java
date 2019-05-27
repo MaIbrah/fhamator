@@ -29,6 +29,9 @@ public class RequestDispatcher implements RequestDispatcherInter {
     @Autowired
     InformationServiceInter informationService;
 
+    @Autowired
+    private StackOverFlowService stackOverFlowService;
+
     public String requestDispatcher(String request) {
 
         if (request.toLowerCase().contains("help")) {
@@ -54,9 +57,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
     }
 
     private String searchQuestion(String request) throws Exception {
-        RequestObject<Question> requestObject = new RequestObject<>();
-        requests.SearchRequest search =new requests.SearchRequest.Builder(request).sort(SearchSort.RELEVANCE).order(Order.DESC).addSite(StackSite.StackOverflow).addBody().build();
-        List<Question> questions = requestObject.getObjects(search);
+        List<Question> questions = stackOverFlowService.getQuestions(request);
         ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= 3 ? questions.subList(0, 3) : questions);
         return questionParser.toHTML();
     }

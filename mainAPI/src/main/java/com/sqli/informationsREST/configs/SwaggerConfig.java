@@ -22,7 +22,6 @@ public class SwaggerConfig {
             .build()
             .apiInfo(metaData());
     }
-
     private ApiInfo metaData() {
         ApiInfo apiInfo = new ApiInfo(
             "Spring Boot REST API",

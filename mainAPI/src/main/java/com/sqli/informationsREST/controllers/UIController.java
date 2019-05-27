@@ -123,7 +123,7 @@ public class UIController {
     private Page<Information> getInformation(Optional<Integer> page, Optional<Integer> size, String name) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
-        return infoService.findPaginated(requestExecute(new RestTemplate(), ELASTIC_SEARCH_LINK + name + "?size=" + pageSize + "&page=" + pageSize),
+        return infoService.findPaginated(requestExecute(ELASTIC_SEARCH_LINK + name + "?size=" + pageSize + "&page=" + pageSize),
             PageRequest.of(currentPage - 1, pageSize));
     }
 

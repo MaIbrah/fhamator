@@ -20,12 +20,17 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <swagger-version>2.6.0</swagger-version>
+    <swagger-version>2.6.1</swagger-version>
     <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
     <thymeleaf-layout-dialect.version>2.2.1</thymeleaf-layout-dialect.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.github.s1mob</groupId>
+      <artifactId>StackExchange4J</artifactId>
+      <version>${LastCommit}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>

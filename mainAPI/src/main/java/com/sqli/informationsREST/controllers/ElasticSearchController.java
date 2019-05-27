@@ -33,8 +33,9 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/REST/elasticsearch")
-@Api(value = "Nespresso elasticsearch api", description = "Information's search Operations", tags = {"elasticsearch Rest"})
+@Api(value = "Nespresso elasticsearch api", description = "ElasticSearch Crud Operations", tags = {"elasticsearch Rest"})
 public class ElasticSearchController {
+    @ApiOperation(value = "Add a set of keywords to an Information")
     @PutMapping("/keywords")
     public ResponseEntity updateElasticSearch(@RequestBody HashMap<String,Object> parms) {
          HttpClient httpClient = HttpClientBuilder.create().build();
@@ -60,15 +61,13 @@ public class ElasticSearchController {
     @ApiOperation(value = "View a list of informations that contains any value given")
     @GetMapping("/{value}")
     public List<Information> getInformationByValues(@PathVariable("value") String value) {
-        RestTemplate getter = new RestTemplate();
-        List<Information> informations = requestExecute(getter,ELASTIC_SEARCH_LINK+"getMatches/"+value.toLowerCase());
+        List<Information> informations = requestExecute(ELASTIC_SEARCH_LINK+"getMatches/"+value.toLowerCase());
         return informations;
     }
-    @ApiOperation(value = "View a list of informations that contains any value given")
+    @ApiOperation(value = "View a list of informations that contains a type and value given")
     @GetMapping("/{type}/{value}")
     public List<Information> getInformationByTypeAndValues(@PathVariable("type") String type,@PathVariable("value") String value) {
-        RestTemplate getter = new RestTemplate();
-        List<Information> informations = requestExecute(getter,ELASTIC_SEARCH_LINK+"getMatches/"+type.toLowerCase()+"/"+value.toLowerCase());
+        List<Information> informations = requestExecute(ELASTIC_SEARCH_LINK+"getMatches/"+type.toLowerCase()+"/"+value.toLowerCase());
         return  informations;
     }
 }

@@ -4,15 +4,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import constants.QuestionSort;
-import constants.StackQuestionFilter;
-import constants.StackSite;
-import exceptions.StackExchangeException;
-import generic.RequestObject;
+import com.sqli.chatUI.services.StackOverFlowService;
+
 import models.Answer;
 import models.Question;
 
 public class QuestionToHTML implements ResponseToHTMLParser {
+
+
     private List<Question> questions;
 
     private QuestionToHTML() {
@@ -47,18 +46,8 @@ public class QuestionToHTML implements ResponseToHTMLParser {
                 questionsHTML.add("<div class=\"fas fa-chevron-circle-down fa-3x chervon-up\" id=\"showResponseButton"
                     + time.getTime() + answerTracker + "\" onclick=\"showResponse('" + time.getTime() + answerTracker + "')\" ></div>");
                 questionsHTML.add("<ul style=\"overflow-y: hidden; display:none \" id=\"reponses" + time.getTime() + answerTracker + "\">");
-                RequestObject<Answer> requestObject = new RequestObject<>();
-                requests.QuestionApi answerRequest = null;
-                try {
-                    answerRequest = new requests.QuestionApi.Builder().answers(question.getQuestion_id())
-                        .addBody().addFilter(StackQuestionFilter.pagesize, "5")
-                        .addSort(QuestionSort.VOTES)
-                        .addFilter(StackQuestionFilter.order, "desc")
-                        .addSite(StackSite.StackOverflow).build();
-                } catch (StackExchangeException e) {
-                    e.printStackTrace();
-                }
-                List<Answer> answers = requestObject.getObjects(answerRequest);
+
+                List<Answer> answers = new StackOverFlowService().getAnswers(question.getQuestion_id());
                 for (Answer answer : answers) {
 
                     StringBuilder html = new StringBuilder();

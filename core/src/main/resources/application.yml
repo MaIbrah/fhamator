@@ -10,4 +10,5 @@ RestServers: http://localhost:8081
 username : mboukhenaif
 password :
 
-
+######## Utils Links ##################
+elasticsearch: /informations/
