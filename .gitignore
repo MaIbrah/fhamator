@@ -57,3 +57,5 @@ elasticsearch/elasticsearch.iml
 mainAPI/target/
 mainAPI/mainAPI.iml
 
+##ignore log##
+log/
