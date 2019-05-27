@@ -1,13 +1,15 @@
 ########Host########
 #hostname: localhost
 #port: 8081
-
-########Configuration Module -chatUI-########
 RestServers: http://localhost:8081
 
-########Configuration Module -adapter-########
+########Configuration Module -chatUI-########
+number-of-stackoverflow-responses : 5
 
+########Configuration Module -adapter-########
 username : mboukhenaif
 password :
 
-
+########Configuration Module -botNLP-########
+prob.classification.naiveBayes.domain : 0.7
+prob.classification.naiveBayes.keywords : 0.4

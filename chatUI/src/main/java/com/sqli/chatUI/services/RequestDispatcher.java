@@ -13,6 +13,7 @@ import com.sqli.chatUI.parsers.InformationToHTML;
 import com.sqli.chatUI.parsers.QuestionToHTML;
 import com.sqli.chatUI.parsers.ResponseToHTMLParser;
 import com.sqli.chatUI.parsers.SearchInformationRequestImpl;
+import com.sqli.chatUI.properties.YmlProperties;
 
 import constants.Order;
 
@@ -57,7 +58,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
         RequestObject<Question> requestObject = new RequestObject<>();
         requests.SearchRequest search =new requests.SearchRequest.Builder(request).sort(SearchSort.RELEVANCE).order(Order.DESC).addSite(StackSite.StackOverflow).addBody().build();
         List<Question> questions = requestObject.getObjects(search);
-        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= 3 ? questions.subList(0, 3) : questions);
+        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= (Integer) YmlProperties.getStackoverflowResponses() ? questions.subList(0,  (Integer) YmlProperties.getStackoverflowResponses()) : questions);
         return questionParser.toHTML();
     }
 
