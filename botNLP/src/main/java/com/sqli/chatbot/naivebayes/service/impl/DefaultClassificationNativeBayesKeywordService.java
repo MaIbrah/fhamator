@@ -4,6 +4,8 @@ import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesKeywordServic
 import com.sqli.chatbot.naivebayes.util.constantes.Constant;
 import com.sqli.chatbot.naivebayes.util.dto.OpenNlpResponse;
 import com.sqli.chatbot.naivebayes.util.opennlp.OpenNLPService;
+import com.sqli.chatbot.naivebayes.util.properties.YmlProperties;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ public class DefaultClassificationNativeBayesKeywordService implements Classific
 
     private String geBestKeyword(OpenNlpResponse nlpResponse) {
 //        return nlpResponse.getProb() > 0.7 ? nlpResponse.getPredicatedResponse()+" "+nlpResponse.getProb() : "None" + nlpResponse.getProb();
-        return nlpResponse.getProb() > 0.4 ? nlpResponse.getPredicatedResponse(): "none" ;
+        Double prob=(Double) YmlProperties.getProbClassificationNaiveBayesKeywords();
+        return nlpResponse.getProb() > prob ? nlpResponse.getPredicatedResponse(): "none" ;
     }
 }

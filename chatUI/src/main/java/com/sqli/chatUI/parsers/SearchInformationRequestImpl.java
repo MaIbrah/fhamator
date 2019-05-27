@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.web.client.RestTemplate;
 
 import com.sqli.chatUI.models.SearchRequest;
-import com.sqli.chatUI.properties.ServersProperties;
+import com.sqli.chatUI.properties.YmlProperties;
 
 public class SearchInformationRequestImpl implements SearchInformationRequest {
 
-    private final static String URL = ServersProperties.getRestServer();
+    private final static String URL = YmlProperties.getRestServer();
 
     @Override
     public Optional<SearchRequest> InformationRequestParser(String request) throws Exception {

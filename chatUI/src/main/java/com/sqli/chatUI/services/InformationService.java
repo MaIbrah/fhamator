@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sqli.chatUI.models.Information;
-import com.sqli.chatUI.properties.ServersProperties;
+import com.sqli.chatUI.properties.YmlProperties;
 
 @Service
 public class InformationService implements InformationServiceInter {
@@ -17,10 +17,11 @@ public class InformationService implements InformationServiceInter {
 
 
 
-    public static final String LINK =  ServersProperties.getRestServer()+"/REST/";
+    public static final String LINK =  YmlProperties.getRestServer()+"/REST/";
 
 
     public List<Information> getInformation(){
+
         RestTemplate restTemplate= new RestTemplate();
         String request= LINK + "informations";
         return requestExecute(restTemplate, request);
