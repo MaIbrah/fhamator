@@ -97,7 +97,7 @@ public class OpenNLPCore implements OpenNLPService {
 
         int i = 0;
         List<String> results = new ArrayList<>();
-        double probs[] = new double[doccat.getNumberOfCategories()];
+        double[] probs = new double[doccat.getNumberOfCategories()];
         for (int j = 0; j < doccat.getNumberOfCategories(); j++) {
             probs[j] = 0;
         }
@@ -144,7 +144,7 @@ public DoccatModel loadOrGenerateModel(String training_file_path, String trainin
         return saveModelToLocal(model, training_model_path);
     }
 
-    private double getMaxOfDoubleArray(double probs[]) {
+    private double getMaxOfDoubleArray(double[] probs) {
         double max = 0;
         for (int i = 0; i < probs.length; i++) {
             max = Math.max(max, probs[i]);

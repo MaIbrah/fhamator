@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/REST/elasticsearch")
 @Api(value = "Nespresso elasticsearch api", description = "ElasticSearch Crud Operations", tags = {"elasticsearch Rest"})
 public class ElasticSearchController {
-    private static Logger log= Logger.getLogger(ElasticSearchController.class);
+    private static Logger log = Logger.getLogger(ElasticSearchController.class.getName());
 
     @ApiOperation(value = "Add a set of keywords to an Information")
     @PutMapping("/keywords")
@@ -52,15 +51,15 @@ public class ElasticSearchController {
             request.setHeader("Content-Type", "application/json;charset=UTF-8");
             request.setEntity(entity);
             httpClient.execute(request);
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- Update elastic search keywords");
+            log.info("Update elastic search keywords");
         } catch (UnsupportedEncodingException e) {
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- " +e.getMessage());
+            log.info(e.getMessage());
             e.printStackTrace();
         } catch (ClientProtocolException e) {
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- " +e.getMessage());
+            log.info(e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- " +e.getMessage());
+            log.info(e.getMessage());
             e.printStackTrace();
         }
         return new ResponseEntity("Information updated successfully", HttpStatus.OK);
@@ -69,14 +68,14 @@ public class ElasticSearchController {
     @GetMapping("/{value}")
     public List<Information> getInformationByValues(@PathVariable("value") String value) {
         List<Information> informations = requestExecute(ELASTIC_SEARCH_LINK+"getMatches/"+value.toLowerCase());
-        this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- search request for" + value);
+        log.info("search request for" + value);
         return informations;
     }
     @ApiOperation(value = "View a list of informations that contains a type and value given")
     @GetMapping("/{type}/{value}")
     public List<Information> getInformationByTypeAndValues(@PathVariable("type") String type,@PathVariable("value") String value) {
         List<Information> informations = requestExecute(ELASTIC_SEARCH_LINK+"getMatches/"+type.toLowerCase()+"/"+value.toLowerCase());
-        this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- search request for the domain" + type + " and the keyword "+ value);
+        log.info("search request for the domain" + type + " and the keyword "+ value);
         return  informations;
     }
 }
