@@ -1,7 +1,5 @@
 package com.sqli.informationsREST.controllers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -34,10 +32,10 @@ public class StackOverFlowController {
             requests.SearchRequest search =
                 new requests.SearchRequest.Builder(request).sort(SearchSort.RELEVANCE).order(Order.DESC).addSite(StackSite.StackOverflow).addBody().build();
             List<Question> questions = requestObject.getObjects(search);
-            this.log.fatal(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- get question["+request+"] from stackOverFlow");
+            log.info("get question["+request+"] from stackOverFlow");
             return ResponseEntity.ok(questions);
         } catch (StackExchangeException e) {
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- " +e.getMessage());
+            log.info(e.getMessage());
             return ResponseEntity.status(300).build();
         }
     }
@@ -52,10 +50,10 @@ public class StackOverFlowController {
                 .addFilter(StackQuestionFilter.order, "desc")
                 .addSite(StackSite.StackOverflow).build();
             List<Answer> answers = requestObject.getObjects(answerRequest);
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- get answer with id ["+id+"] from stackOverFlow");
+            log.info("get answer with id ["+id+"] from stackOverFlow");
             return ResponseEntity.ok(answers);
         } catch (StackExchangeException e) {
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- " +e.getMessage());
+            log.info(e.getMessage());
             return ResponseEntity.status(300).build();
         }
     }
