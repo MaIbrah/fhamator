@@ -68,14 +68,14 @@ public class ElasticSearchController {
     @GetMapping("/{value}")
     public List<Information> getInformationByValues(@PathVariable("value") String value) {
         List<Information> informations = requestExecute(ELASTIC_SEARCH_LINK+"getMatches/"+value.toLowerCase());
-        log.info("search request for" + value);
+        log.info("search request for " + value);
         return informations;
     }
     @ApiOperation(value = "View a list of informations that contains a type and value given")
     @GetMapping("/{type}/{value}")
     public List<Information> getInformationByTypeAndValues(@PathVariable("type") String type,@PathVariable("value") String value) {
         List<Information> informations = requestExecute(ELASTIC_SEARCH_LINK+"getMatches/"+type.toLowerCase()+"/"+value.toLowerCase());
-        log.info("search request for the domain" + type + " and the keyword "+ value);
+        log.info("search request for the domain " + type + " and the keyword "+ value);
         return  informations;
     }
 }

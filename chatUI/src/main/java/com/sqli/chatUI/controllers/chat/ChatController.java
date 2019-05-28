@@ -1,5 +1,6 @@
 package com.sqli.chatUI.controllers.chat;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -21,9 +22,12 @@ public class ChatController {
     @Autowired
     private RequestDispatcher requestDispatcher;
 
+    private static Logger log = Logger.getLogger(ChatController.class.getName());
+
     @MessageMapping("/{user}/chat.sendMessage")
     @SendTo("/topic/{user}")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage, @PathVariable String user) throws InterruptedException {
+    public ChatMessage sendMessage(@Payload ChatMessage chatMessage, @PathVariable String user) {
+        //log.info("User " + user +" has sent a message with the following content : " + chatMessage.getContent());
         return chatMessage;
     }
 
@@ -31,24 +35,26 @@ public class ChatController {
     @MessageMapping("/{user}/chat.sendReplyMessage")
     @SendTo("/queue/{user}")
     public ChatMessage sendReplay(@Payload ChatMessage chatMessage, @PathVariable String user) throws InterruptedException {
+        log.info("User " + chatMessage.getSender() +" has sent a message with the following content : " + chatMessage.getContent());
         Thread.sleep(Long.parseLong("100"));
         ChatMessage message = new ChatMessage();
-        String retournedMessage =returnMessage(chatMessage.getContent());
+        String returnedMessage =returnMessage(chatMessage.getContent());
 
-        if (ResponseCode.NO_DOMAIN_FOUND.getValue().equalsIgnoreCase(retournedMessage)){
+        if (ResponseCode.NO_DOMAIN_FOUND.getValue().equalsIgnoreCase(returnedMessage)){
             message.setContent(chatMessage.getContent());
             message.setType(ChatMessage.MessageType.ADD_DOMAIN);
         }
-        else if(ResponseCode.NO_DATA_FOUND.getValue().equalsIgnoreCase(retournedMessage)) {
+        else if(ResponseCode.NO_DATA_FOUND.getValue().equalsIgnoreCase(returnedMessage)) {
             message.setContent(ResponseCode.NO_DATA_FOUND.getValue());
             message.setType(ChatMessage.MessageType.CHAT);
         }
         else{
-            message.setContent(retournedMessage);
+            message.setContent(returnedMessage);
             message.setType(ChatMessage.MessageType.CHAT);
         }
         message.setSender("BOT");
         messagingTemplate.convertAndSend("/topic/"+chatMessage.getSender(),message);
+        log.info("User " + chatMessage.getSender() +" has been answered for his demand");
         return chatMessage;
     }
 

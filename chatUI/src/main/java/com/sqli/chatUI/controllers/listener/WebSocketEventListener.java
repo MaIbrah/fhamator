@@ -31,6 +31,7 @@ public class WebSocketEventListener {
 
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if(username != null) {
+            logger.info("User "+username+" left!");
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setType(ChatMessage.MessageType.LEAVE);
             chatMessage.setSender(username);
