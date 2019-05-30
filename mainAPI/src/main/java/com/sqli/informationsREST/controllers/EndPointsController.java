@@ -1,7 +1,5 @@
 package com.sqli.informationsREST.controllers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -36,14 +34,14 @@ public class EndPointsController {
     @ApiOperation(value = "View a list of informations", response = Iterable.class)
     @GetMapping("/informations")
     public List<Information> getAllInformations() {
-        this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- get All informations in database");
+        log.info("get All informations in database");
         return repository.findAll();
     }
 
     @ApiOperation(value = "View a list of informations that contains the type and name given")
     @GetMapping("/information/{type}/{name}")
     public List<Information> getInformationbyTypeAndName(@PathVariable("type") String type, @PathVariable("name") String name) {
-        this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- get All informations with the type: "+type+ " and the name: "+name);
+        log.info("get All informations with the type: "+type+ " and the name: "+name);
         return repository.findByTypeAndName(type, name);
     }
 
@@ -52,7 +50,7 @@ public class EndPointsController {
     public ResponseEntity insertInformation(@RequestBody List<Information> informations) {
         for (Information information : informations) {
             repository.insert(information);
-            this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- insert information " + information.get_id());
+            log.info("insert information " + information.get_id());
         }
 
         return new ResponseEntity("Informations created successfully", HttpStatus.OK);
@@ -62,7 +60,7 @@ public class EndPointsController {
     @PutMapping("/information")
     public ResponseEntity updateInformation(@RequestBody Information information) {
         repository.save(information);
-        this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- update information " + information.get_id());
+        log.info("update information " + information.get_id());
         return new ResponseEntity("Information updated successfully", HttpStatus.OK);
     }
 
@@ -70,7 +68,7 @@ public class EndPointsController {
     @DeleteMapping("/information/{id}")
     public ResponseEntity deleteInformation(@PathVariable String id) {
         repository.deleteById(id);
-        this.log.info(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss")) + " -- delete information " + id);
+        log.info("delete information " + id);
         return new ResponseEntity("Information with ID :" + id + " was deleted successfully", HttpStatus.OK);
     }
 }

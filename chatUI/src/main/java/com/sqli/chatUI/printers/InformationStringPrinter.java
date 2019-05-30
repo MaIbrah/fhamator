@@ -40,6 +40,4 @@ public class InformationStringPrinter implements InformationPrinter {
         }
         return attributsString.toString();
     }
-
-    ;
 }

@@ -45,7 +45,7 @@ function onConnected() {
     stompClient.send("/app/chat.addUser",
             {},
             JSON.stringify({sender: username, type: 'JOIN'})
-    )
+    );
     connectingElement.classList.add('hidden');
 }
 
@@ -186,7 +186,7 @@ function onMessageReceived(payload) {
     } else if (message.type === 'ADD_DOMAIN') {
         var searchRequest = message.content;
         message.content = "I couldn't  understand you, can you please fill the form so I can help you next time";
-        message.content += "<button id='" + (responseIndex) + "' class='fas fa-ellipsis-h fa-2x' style='color: #068dd0; background: none;' onclick='openForm(" + (responseIndex++) + ",\"" + searchRequest + "\")'></button>"
+        message.content += "<button id='" + (responseIndex) + "' class='fas fa-ellipsis-h fa-2x' style='color: #068dd0; background: none;' onclick='openForm(" + (responseIndex++) + ",\"" + searchRequest + "\")'></button>";
         extracted(messageElement, message);
     } else {
         extracted(messageElement, message);
@@ -217,7 +217,7 @@ function closeForm() {
 }
 
 function showResponse(index) {
-    console.log("click!!")
+    console.log("click!!");
     var disp = document.getElementById("reponses" + index).style.display;
     var className = document.getElementById("showResponseButton" + index).className;
     if (disp == "none") {
