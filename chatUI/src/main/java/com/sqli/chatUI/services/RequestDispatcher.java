@@ -15,11 +15,6 @@ import com.sqli.chatUI.parsers.ResponseToHTMLParser;
 import com.sqli.chatUI.parsers.SearchInformationRequestImpl;
 import com.sqli.chatUI.properties.YmlProperties;
 
-import constants.Order;
-
-import constants.SearchSort;
-import constants.StackSite;
-import generic.RequestObject;
 import models.Question;
 
 @Service
@@ -42,11 +37,11 @@ public class RequestDispatcher implements RequestDispatcherInter {
             SearchInformationRequestImpl searchInformationRequest = new SearchInformationRequestImpl();
             try {
                 searchRequest = searchInformationRequest.InformationRequestParser(request).get();
-                if("none".equalsIgnoreCase(searchRequest.getDomain())){
-                   return ResponseCode.NO_DOMAIN_FOUND.getValue();
-                }
                 if (Domains.STACKOVERFLOW.toString().equalsIgnoreCase(searchRequest.getDomain())) {
                     return searchQuestion(request);
+                } else if ("none".equalsIgnoreCase(searchRequest.getDomain())
+                    || searchRequest.getKeyword().contains("none")) {
+                    return ResponseCode.NO_DOMAIN_FOUND.getValue();
                 } else {
                     return getResponse(searchRequest);
                 }
@@ -57,11 +52,10 @@ public class RequestDispatcher implements RequestDispatcherInter {
         return ResponseCode.NO_DATA_FOUND.getValue();
     }
 
-    private String searchQuestion(String request) throws Exception {
-
+    private String searchQuestion(String request){
         List<Question> questions = stackOverFlowService.getQuestions(request);
-        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= (Integer) YmlProperties.getStackoverflowResponses() ? questions.subList(0,  (Integer) YmlProperties.getStackoverflowResponses()) : questions);
-
+        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= (Integer) YmlProperties.getStackoverflowResponses() ?
+            questions.subList(0, (Integer) YmlProperties.getStackoverflowResponses()) : questions);
         return questionParser.toHTML();
     }
 

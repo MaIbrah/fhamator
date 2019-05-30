@@ -15,5 +15,5 @@ elasticsearch: /informations/
 
 ########Configuration Module -botNLP-########
 prob.classification.naiveBayes.domain : 0.7
-prob.classification.naiveBayes.keywords : 0.4
+prob.classification.naiveBayes.keywords : 0.7
 

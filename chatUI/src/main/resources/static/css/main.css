@@ -167,6 +167,11 @@ button.accent {
 }
 
 
+#messageArea{
+    background-color: #0096bf;
+
+}
+
 .start-btn {
     width: 300px;
     background: #43a7d9;
@@ -209,7 +214,7 @@ button.accent {
 
 #chat-page ul {
     list-style-type: none;
-    background-color: #FFF;
+    /*background-color: #0096bf;*/
     margin: 0;
     overflow: auto;
     overflow-y: scroll;
@@ -222,10 +227,10 @@ button.accent {
 }
 
 #chat-page ul li {
-    line-height: 1.5rem;
-    padding: 10px 20px;
+    line-height: 2rem;
+    padding: 10px 100px;
     margin: 0;
-    border-bottom: 1px solid #f4f4f4;
+    /*border-bottom: 1px solid #f4f4f4;*/
 }
 
 #chat-page ul li p {
@@ -254,7 +259,6 @@ button.accent {
     width: 42px;
     height: 42px;
     overflow: hidden;
-    left: 10px;
     display: inline-block;
     vertical-align: middle;
     font-size: 18px;
@@ -266,6 +270,20 @@ button.accent {
     text-transform: uppercase;
 }
 
+.chat-message-user i{
+    text-align: right;
+    right: 40px;
+}
+
+.chat-message-user {
+    text-align: right;
+}
+
+.chat-message-bot i{
+    left: 10px;
+}
+
+
 #chat-page .chat-message span {
     color: #333;
     font-weight: 600;
@@ -273,7 +291,21 @@ button.accent {
 
 #chat-page .chat-message p {
     color: #43464b;
+    padding: 10px;
 }
+
+
+#chat-page .chat-message-bot p {
+    background: #f5f5dc;
+    border-radius: 0px 20px;
+}
+
+
+#chat-page .chat-message-user p {
+    background: rgba(171, 245, 200, 0.26);
+    border-radius: 20px 0px;
+}
+
 
 #messageForm .input-group input {
     float: left;
@@ -331,6 +363,7 @@ button.accent {
 
     #chat-page ul {
         height: calc(100% - 120px);
+        border-bottom: 1px solid #f4f4f4;
     }
 
     #messageForm .input-group button {
@@ -379,11 +412,8 @@ button.accent {
 }
 
 .response{
-    border: solid aliceblue 2px;
-
+    border: solid #ffffff 2px;
     border-radius: 5px;
-
-    background: aliceblue;
 }
 
 pre{
