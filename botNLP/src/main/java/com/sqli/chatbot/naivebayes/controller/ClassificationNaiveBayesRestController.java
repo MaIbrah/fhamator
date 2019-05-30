@@ -36,6 +36,7 @@ public class ClassificationNaiveBayesRestController {
     @GetMapping(value = "/domain/{query}")
     private ResponseEntity<SearchQueryResponse> getDomainFromSearchQuery(@PathVariable("query") String request) {
         try {
+            request = request.toLowerCase();
             String domain = domainService.getDomainFromSearchQuery(request);
             List<String> keywords = new ArrayList<>();
             String resultKeyword=keywordService.getMostPredicatedKeywordFromSearchQuery(request);
