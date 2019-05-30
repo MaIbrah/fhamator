@@ -1,6 +1,12 @@
 package com.sqli.chatUI.services;
 
+import static com.sqli.chatUI.enums.Domains.FORMATION;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,8 +48,8 @@ public class RequestDispatcher implements RequestDispatcherInter {
             SearchInformationRequestImpl searchInformationRequest = new SearchInformationRequestImpl();
             try {
                 searchRequest = searchInformationRequest.InformationRequestParser(request).get();
-                if("none".equalsIgnoreCase(searchRequest.getDomain())){
-                   return ResponseCode.NO_DOMAIN_FOUND.getValue();
+                if ("none".equalsIgnoreCase(searchRequest.getDomain())) {
+                    return ResponseCode.NO_DOMAIN_FOUND.getValue();
                 }
                 if (Domains.STACKOVERFLOW.toString().equalsIgnoreCase(searchRequest.getDomain())) {
                     return searchQuestion(request);
@@ -57,25 +63,56 @@ public class RequestDispatcher implements RequestDispatcherInter {
         return ResponseCode.NO_DATA_FOUND.getValue();
     }
 
-    private String searchQuestion(String request) throws Exception {
+    private String searchQuestion(String request) {
 
         List<Question> questions = stackOverFlowService.getQuestions(request);
-        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= (Integer) YmlProperties.getStackoverflowResponses() ? questions.subList(0,  (Integer) YmlProperties.getStackoverflowResponses()) : questions);
-
+        ResponseToHTMLParser questionParser = new QuestionToHTML(questions.size() >= (Integer) YmlProperties.getStackoverflowResponses() ?
+            questions.subList(0, (Integer) YmlProperties.getStackoverflowResponses()) : questions);
         return questionParser.toHTML();
     }
 
     private String getResponse(SearchRequest searchRequest) {
         if (!searchRequest.getKeyword().contains("None")) {
-            List<Information> informations = getByTypeAndKeywords(searchRequest.getDomain(), String.join(" ", searchRequest.getKeyword()));
-            if (informations.isEmpty()) {
-                return "<strong style='color: #ff4743'>No Data Found !</strong>";
-            } else {
-                ResponseToHTMLParser informationParser = new InformationToHTML(informations, searchRequest.getKeyword());
-                return informationParser.toHTML();
+            if (FORMATION.toString().equalsIgnoreCase(searchRequest.getDomain())) {
+                List<Information> informations = getByTypeAndKeywords(searchRequest.getDomain(), String.join(" ", searchRequest.getKeyword()));
+                if (searchRequest.getKeyword().contains("next")) {
+                    final LocalDateTime startDate = LocalDateTime.now();
+                    final LocalDateTime endDate = startDate.plusWeeks(1);
+                    informations = filterByStartAndEndDate(informations, startDate, endDate);
+                }
+                if (searchRequest.getKeyword().contains("previous")) {
+                    final LocalDateTime endDate = LocalDateTime.now();
+                    final LocalDateTime startDate = endDate.minusWeeks(1);
+                    informations = filterByStartAndEndDate(informations, startDate, endDate);
+                }
+                return getInformationAsString(searchRequest,informations);
             }
+            return getResponseByTypeAndKeyWords(searchRequest);
         }
         return NO_DATA_FOUND;
+    }
+
+    private List<Information> filterByStartAndEndDate(final List<Information> informations, final LocalDateTime startDate,final LocalDateTime endDate) {
+        return informations.stream().filter(info -> {
+            final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            final LocalDateTime dateDu = LocalDateTime.parse(info.getAttributes().get("Date Du"),format);
+            final LocalDateTime dateAu = LocalDateTime.parse(info.getAttributes().get("Date Au"),format);
+            return startDate.compareTo(dateDu) * dateDu.compareTo(endDate) >=0 || endDate.compareTo(dateAu) * dateAu.compareTo(endDate) >=0;
+        }).collect(Collectors.toList());
+    }
+
+    private String getResponseByTypeAndKeyWords(SearchRequest searchRequest) {
+        List<Information> informations = getByTypeAndKeywords(searchRequest.getDomain(), String.join(" ", searchRequest.getKeyword()));
+        return getInformationAsString(searchRequest, informations);
+    }
+
+    private String getInformationAsString(SearchRequest searchRequest, List<Information> informations) {
+        if (informations.isEmpty()) {
+            return "<strong style='color: #ff4743'>No Data Found !</strong>";
+        } else {
+            ResponseToHTMLParser informationParser = new InformationToHTML(informations, searchRequest.getKeyword());
+            return informationParser.toHTML();
+        }
     }
 
     private List<Information> getAll() {
