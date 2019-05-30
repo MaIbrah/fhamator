@@ -97,7 +97,8 @@ public class RequestDispatcher implements RequestDispatcherInter {
             final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             final LocalDateTime dateDu = LocalDateTime.parse(info.getAttributes().get("Date Du"),format);
             final LocalDateTime dateAu = LocalDateTime.parse(info.getAttributes().get("Date Au"),format);
-            return startDate.compareTo(dateDu) * dateDu.compareTo(endDate) >=0 || endDate.compareTo(dateAu) * dateAu.compareTo(endDate) >=0;
+           // return startDate.compareTo(dateDu) * dateDu.compareTo(endDate) >=0 || endDate.compareTo(dateAu) * dateAu.compareTo(endDate) >=0;
+            return (dateDu.isAfter(startDate) && dateDu.isBefore(endDate)) || (dateAu.isAfter(startDate) && dateDu.isBefore(endDate));
         }).collect(Collectors.toList());
     }
 
