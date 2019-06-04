@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sqli.chatUI.enums.ResponseCode;
@@ -23,6 +24,9 @@ public class ChatController {
     private RequestDispatcher requestDispatcher;
 
     private static Logger log = Logger.getLogger(ChatController.class.getName());
+
+
+
 
     @MessageMapping("/{user}/chat.sendMessage")
     @SendTo("/topic/{user}")
