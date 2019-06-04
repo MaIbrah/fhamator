@@ -1,8 +1,5 @@
 'use strict';
 
-
-console.log("=========================>"+user);
-
 var usernamePage = document.querySelector('#username-page');
 var chatPage = document.querySelector('#chat-page');
 var usernameForm = document.querySelector('#usernameForm');
@@ -26,15 +23,14 @@ var colors = [
 ];
 
 function connect(event) {
-    username = user;
-    console.log("connect function "+username);
+    username = document.querySelector('#name').value.trim();
+
     if (username) {
-        //usernamePage.classList.add('hidden');
-        //chatPage.classList.remove('hidden');
+        usernamePage.classList.add('hidden');
+        chatPage.classList.remove('hidden');
 
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
-
         stompClient.connect({}, onConnected, onError);
     }
     event.preventDefault();
@@ -49,9 +45,8 @@ function onConnected() {
             {},
             JSON.stringify({sender: username, type: 'JOIN'})
     );
-
-    connectingElement.classList.add('hidden');
     window.location.href = "/chat";
+    connectingElement.classList.add('hidden');
 }
 
 function onError(error) {
@@ -60,9 +55,12 @@ function onError(error) {
 }
 
 function sendMessage(event) {
-    var messageContent = messageInput.value.trim();
 
+
+    var messageContent = messageInput.value.trim();
+    console.log("=========================================================> "+stompClient);
     if (messageContent && stompClient) {
+        console.log("=========================================================> 1"+messageContent);
         var chatMessage = {
             sender: username,
             content: messageInput.value,
@@ -76,16 +74,19 @@ function sendMessage(event) {
         textElement.appendChild(messageText);
 
         messageElement.appendChild(textElement);
-
+        console.log("=========================================================> username" + username);
         messageArea.appendChild(messageElement);
         messageArea.scrollTop = messageArea.scrollHeight;
 
         stompClient.send("/app/" + username + "/chat.sendReplyMessage", {}, JSON.stringify(chatMessage));
+        console.log("=========================================================>/app/" + username + "chat.sendReplyMessage", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
 
         Searching = true;
         searchingElement.classList.remove('hidden');
     }
+
+
     event.preventDefault();
 }
 
@@ -99,7 +100,7 @@ function extracted(messageElement, message) {
         messageElement.classList.add('chat-message-bot');
         var avatarText = document.createElement("img");
         avatarText.src = "/images/robot-icon.png";
-        avatarText.style = "width : 42px";
+        avatarText.style="width : 42px";
     } else {
         messageElement.classList.add('chat-message-user');
         var avatarText = document.createTextNode(message.sender[0] + message.sender[1]);
@@ -113,6 +114,7 @@ function extracted(messageElement, message) {
 
     messageElement.appendChild(avatarElement);
 
+
     // var massageTextElement = document.createElement('div');
 
 }
@@ -120,8 +122,8 @@ function extracted(messageElement, message) {
 function addDomainAndKeywordsRequest() {
 
     addDomain(document.getElementById("request").value, document.getElementById("domain").value);
-    var keys = document.getElementById("keywords").value;
-    if (keys != "")
+    var keys =document.getElementById("keywords").value;
+    if (keys!= "")
         addKeyword(keys);
     document.getElementById("myForm").style.display = "none";
     document.getElementById("domain").value = "";
@@ -130,7 +132,7 @@ function addDomainAndKeywordsRequest() {
         document.getElementById(idAddButton).style.color = "silver";
     }
     document.getElementById("message").disabled = false;
-    sendUpResponseReply(event, 'Thank you for contributing!');
+    sendUpResponseReply(event,'Thank you for contributing!');
 }
 
 function addDomain(searchQuery, clientDomain) {
@@ -272,12 +274,12 @@ function getAvatarColor(messageSender) {
     return colors[index];
 }
 
-function sendUpResponseReply(event, message) {
+function sendUpResponseReply(event,message) {
 
     if (stompClient) {
         var chatMessage = {
             sender: 'BOT',
-            content: message,
+            content: message ,
             type: 'CHAT'
         };
 
@@ -308,9 +310,5 @@ function showThis(idText, idShowMore) {
     }
 }
 
-
-window.onstart=connect;
-
-//usernameForm.addEventListener('submit', connect, true);
 
 messageForm.addEventListener('submit', sendMessage, true);

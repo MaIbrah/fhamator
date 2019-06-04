@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>SQLI Chat Application</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+<noscript>
+    <h2>Sorry! Your browser doesn't support Javascript</h2>
+</noscript>
+
+<div id="chat-page">
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="/images/fhamator.png" style="width: 10%;">
+        </div>
+
+        <div class="connecting">
+            Connecting...
+        </div>
+
+        <ul id="messageArea">
+
+        </ul>
+        <div class="searching hidden">
+            Searching...
+        </div>
+        <div class="form-popup" id="myForm">
+            <form action="/" class="form-container">
+                <h1>Domaine Adder</h1>
+                <input id="request" type="hidden" value="">
+                <label><b>Domaine</b></label>
+                <input type="text" placeholder="Enter Domaine" id="domain" required>
+
+                <label><b>KeyWords</b></label>
+                <input type="text" placeholder="Enter Keywords seperated with ';'" id="keywords" >
+
+                <button type="button" class="btn" onclick="addDomainAndKeywordsRequest(this)">Add</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+            </form>
+        </div>
+        <form id="messageForm" name="messageForm" nameForm="messageForm">
+            <div class="form-group">
+                <div class="input-group clearfix">
+                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+                    <button type="submit" class="fas fa-play fa-2x send"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var user = /*[[${username}]]*/ 'default';
+    console.log("==========> in HTML" + user);
+
+    /*]]>*/
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+</body>
+</html>

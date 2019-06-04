@@ -17,13 +17,13 @@
 
     <div id="username-page">
         <div class="username-page-container">
-            <img src="images/fhamatorw.png" class="logo">
-            <form id="usernameForm" name="usernameForm">
+            <img src="/images/fhamatorw.png" class="logo">
+            <form method="post" action="/chat" >
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="username-input" id="inputGroup-sizing-lg">Username</span>
                     </div>
-                    <input type="text" id="name" class="form-control" style="height:70px" aria-label="Username" aria-describedby="button-addon2">
+                    <input type="text" id="name" name="username" class="form-control" style="height:70px" aria-label="Username" aria-describedby="button-addon2">
                     <div class="input-group-append">
                         <button class="start-btn" type="submit" id="button-addon2">Start Chatting</button>
                     </div>
@@ -33,10 +33,10 @@
         </div>
     </div>
 
-    <div id="chat-page" class="hidden">
+    <!--<div id="chat-page" class="hidden">
         <div class="chat-container">
             <div class="chat-header">
-                <img src="images/fhamator.png" style="width: 10%;">
+                <img src="/images/fhamator.png" style="width: 10%;">
             </div>
             <div class="connecting">
                 Connecting...
@@ -71,11 +71,12 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div>-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="/js/main.js"></script>
+    <!--<script src="/js/main.js"></script>-->
+
   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
   </body>
 </html>
