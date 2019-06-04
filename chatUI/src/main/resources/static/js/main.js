@@ -51,7 +51,7 @@ function onConnected() {
     );
 
     connectingElement.classList.add('hidden');
-    window.location.href = "/chat";
+    sendUpResponseReply(event,"Hi "+username);
 }
 
 function onError(error) {
@@ -309,8 +309,8 @@ function showThis(idText, idShowMore) {
 }
 
 
-window.onstart=connect;
-
+//window.onstart=connect;
+document.addEventListener('DOMContentLoaded',connect,false);
 //usernameForm.addEventListener('submit', connect, true);
 
 messageForm.addEventListener('submit', sendMessage, true);

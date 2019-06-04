@@ -58,9 +58,9 @@ function sendMessage(event) {
 
 
     var messageContent = messageInput.value.trim();
-    console.log("=========================================================> "+stompClient);
+    console.log("=========================================================> "+messageContent);
     if (messageContent && stompClient) {
-        console.log("=========================================================> 1"+messageContent);
+        console.log("=========================================================> username"+messageContent);
         var chatMessage = {
             sender: username,
             content: messageInput.value,
