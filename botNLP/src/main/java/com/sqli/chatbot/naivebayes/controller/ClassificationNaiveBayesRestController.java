@@ -39,7 +39,7 @@ public class ClassificationNaiveBayesRestController {
             request = request.toLowerCase();
             String domain = domainService.getDomainFromSearchQuery(request);
             List<String> keywords = new ArrayList<>();
-            String resultKeyword=keywordService.getMostPredicatedKeywordFromSearchQuery(request);
+            String resultKeyword = keywordService.getMostPredicatedKeywordFromSearchQuery(request);
             if(resultKeyword.contains("none") ) keywords.add("none");
             else  keywords  = keywordService.getKeywordsFromSearchQuery(request);
 

@@ -51,7 +51,20 @@ function onConnected() {
     );
 
     connectingElement.classList.add('hidden');
-    sendUpResponseReply(event,"Hi "+username);
+    //sendUpResponseReply(event,"Hi "+username);
+    let messageElement = document.createElement('li');
+    let chatMessage = {
+        sender: "BOT",
+        content: "Hi "+username,
+        type: 'CHAT'
+    };
+    console.log(chatMessage);
+    extracted(messageElement,chatMessage);
+    let textElement = document.createElement('p');
+    let html = chatMessage.content;
+    textElement.innerHTML = html;
+    messageElement.appendChild(textElement);
+    messageArea.appendChild(messageElement);
 }
 
 function onError(error) {
@@ -113,7 +126,6 @@ function extracted(messageElement, message) {
 
     messageElement.appendChild(avatarElement);
 
-    // var massageTextElement = document.createElement('div');
 
 }
 
@@ -314,3 +326,4 @@ document.addEventListener('DOMContentLoaded',connect,false);
 //usernameForm.addEventListener('submit', connect, true);
 
 messageForm.addEventListener('submit', sendMessage, true);
+/*****************************************************************************************************************/
