@@ -1,7 +1,6 @@
 'use strict';
 
-
-console.log("=========================>"+user);
+console.log("=========================>" + user);
 
 var usernamePage = document.querySelector('#username-page');
 var chatPage = document.querySelector('#chat-page');
@@ -24,10 +23,40 @@ var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
+var currentFormID = 0;
+
+function drawHTMLForm(searchRequest) {
+    let formHTML = "<form action=\"/\" class=\"form-container\" id='form" + currentFormID + "'> \n" +
+            "                <h1>Domaine Adder</h1>\n" +
+            "                <input id=\"request\" type=\"hidden\" value=" + searchRequest + ">\n" +
+            "                <label><b>Domaine</b></label>\n" +
+            "                <input type=\"text\" placeholder=\"Enter Domaine\" id=\"domain\" required>\n" +
+            "\n" +
+            "                <label><b>KeyWords</b></label>\n" +
+            "                <input type=\"text\" placeholder=\"Enter Keywords seperated with ','\" id=\"keywords\" >\n" +
+            "\n" +
+            "                <button type=\"button\" class=\"btn\" onclick=\"addDomainAndKeywordsRequest(this)\">Add</button>\n" +
+            "            </form>";
+    let messageElement = document.createElement('li');
+    let chatMessage = {
+        sender: "BOT",
+        content: formHTML,
+        type: 'CHAT'
+    };
+    console.log(chatMessage);
+    extracted(messageElement, chatMessage);
+    let textElement = document.createElement('div');
+    let html = chatMessage.content;
+    textElement.innerHTML = html;
+    messageElement.appendChild(textElement);
+    messageArea.appendChild(messageElement);
+    ++currentFormID;
+
+}
 
 function connect(event) {
     username = user;
-    console.log("connect function "+username);
+    console.log("connect function " + username);
     if (username) {
         //usernamePage.classList.add('hidden');
         //chatPage.classList.remove('hidden');
@@ -55,11 +84,11 @@ function onConnected() {
     let messageElement = document.createElement('li');
     let chatMessage = {
         sender: "BOT",
-        content: "Hi "+username,
+        content: "Hi " + username,
         type: 'CHAT'
     };
     console.log(chatMessage);
-    extracted(messageElement,chatMessage);
+    extracted(messageElement, chatMessage);
     let textElement = document.createElement('p');
     let html = chatMessage.content;
     textElement.innerHTML = html;
@@ -72,7 +101,20 @@ function onError(error) {
     connectingElement.style.color = 'red';
 }
 
+function disableAddButton(id) {
+    document.getElementById(id).disabled = true;
+    document.getElementById(id).style.color = "silver";
+}
+
+function closeForm(id) {
+    let element = document.getElementById("form" + id);
+    if (element) element.parentNode.removeChild(element);
+}
+
 function sendMessage(event) {
+    if(responseIndex > 0 ) disableAddButton(responseIndex.valueOf() - 1);
+    if (currentFormID > 0) closeForm(currentFormID.valueOf() - 1);
+
     var messageContent = messageInput.value.trim();
 
     if (messageContent && stompClient) {
@@ -126,12 +168,11 @@ function extracted(messageElement, message) {
 
     messageElement.appendChild(avatarElement);
 
-
 }
 
 function addDomainAndKeywordsRequest() {
-
-    addDomain(document.getElementById("request").value, document.getElementById("domain").value);
+    disableAddButton(responseIndex.valueOf() - 1);
+    addDomain(document.getElementById("request" + currentFormID).value, document.getElementById("domain" + currentFormID).value);
     var keys = document.getElementById("keywords").value;
     if (keys != "")
         addKeyword(keys);
@@ -218,17 +259,9 @@ function onMessageReceived(payload) {
 }
 
 function openForm(id, searchRequest) {
-    idAddButton = id;
-    document.getElementById("request").value = searchRequest;
-    document.getElementById("myForm").style.display = "block";
-    document.getElementById("message").value = "";
-    document.getElementById("message").disabled = true;
-}
 
-function closeForm() {
-    document.getElementById("myForm").style.display = "none";
-    document.getElementById("message").disabled = false;
-
+    disableAddButton(responseIndex.valueOf() - 1);
+    drawHTMLForm(searchRequest);
 }
 
 function showResponse(index) {
@@ -247,7 +280,7 @@ function showResponse(index) {
 
 }
 
-function upThis(id, keyWords, responseInedx) {
+function upThis(id, keyWords, responseIndex) {
     console.log("->" + id);
     console.log(keyWords);
     var url = "/REST/elasticsearch/keywords";
@@ -271,8 +304,8 @@ function upThis(id, keyWords, responseInedx) {
         });
     });
 
-    document.getElementById("upResponse" + responseInedx.valueOf()).style.pointerEvents = "none";
-    document.getElementById("upResponse" + responseInedx.valueOf()).style.color = "#e0e0e0";
+    document.getElementById("upResponse" + responseIndex.valueOf()).style.pointerEvents = "none";
+    document.getElementById("upResponse" + responseIndex.valueOf()).style.color = "#e0e0e0";
 }
 
 function getAvatarColor(messageSender) {
@@ -285,7 +318,6 @@ function getAvatarColor(messageSender) {
 }
 
 function sendUpResponseReply(event, message) {
-
     if (stompClient) {
         var chatMessage = {
             sender: 'BOT',
@@ -305,7 +337,7 @@ function sendUpResponseReply(event, message) {
         messageArea.appendChild(messageElement);
         messageArea.scrollTop = messageArea.scrollHeight;
 
-        stompClient.send("/app/" + username + "/chat.sendReplyMessage", {}, JSON.stringify(chatMessage));
+        // stompClient.send("/app/" + username + "/chat.sendReplyMessage", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -320,9 +352,8 @@ function showThis(idText, idShowMore) {
     }
 }
 
-
 //window.onstart=connect;
-document.addEventListener('DOMContentLoaded',connect,false);
+document.addEventListener('DOMContentLoaded', connect, false);
 //usernameForm.addEventListener('submit', connect, true);
 
 messageForm.addEventListener('submit', sendMessage, true);
