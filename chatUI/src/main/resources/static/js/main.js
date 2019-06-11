@@ -352,9 +352,7 @@ function showThis(idText, idShowMore) {
     }
 }
 
-//window.onstart=connect;
 document.addEventListener('DOMContentLoaded', connect, false);
 //usernameForm.addEventListener('submit', connect, true);
 
 messageForm.addEventListener('submit', sendMessage, true);
-/*****************************************************************************************************************/
