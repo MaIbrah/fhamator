@@ -108,7 +108,7 @@ function disableAddButton(id) {
 
 function closeForm(id) {
     let element = document.getElementById("form" + id);
-    if (element) element.parentNode.removeChild(element);
+    if (element) element.parentNode.parentElement.remove();
 }
 
 function sendMessage(event) {
@@ -172,7 +172,8 @@ function extracted(messageElement, message) {
 
 function addDomainAndKeywordsRequest() {
     disableAddButton(responseIndex.valueOf() - 1);
-    addDomain(document.getElementById("request" + currentFormID).value, document.getElementById("domain" + currentFormID).value);
+    closeForm(currentFormID.valueOf() - 1);
+    addDomain(document.getElementById("request").value, document.getElementById("domain").value);
     var keys = document.getElementById("keywords").value;
     if (keys != "")
         addKeyword(keys);
