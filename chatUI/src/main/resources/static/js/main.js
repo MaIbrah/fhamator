@@ -36,6 +36,7 @@ function drawHTMLForm(searchRequest) {
             "                <input type=\"text\" placeholder=\"Enter Keywords seperated with ','\" id=\"keywords\" >\n" +
             "\n" +
             "                <button type=\"button\" class=\"btn\" onclick=\"addDomainAndKeywordsRequest(this)\">Add</button>\n" +
+            "  <button type=\"button\" class=\"btn cancel\" onclick=\"closeForm("+currentFormID+")\">Close</button>"+
             "            </form>";
     let messageElement = document.createElement('li');
     let chatMessage = {
@@ -171,8 +172,6 @@ function extracted(messageElement, message) {
 }
 
 function addDomainAndKeywordsRequest() {
-    disableAddButton(responseIndex.valueOf() - 1);
-    closeForm(currentFormID.valueOf() - 1);
     addDomain(document.getElementById("request").value, document.getElementById("domain").value);
     var keys = document.getElementById("keywords").value;
     if (keys != "")
@@ -185,6 +184,8 @@ function addDomainAndKeywordsRequest() {
     }
     document.getElementById("message").disabled = false;
     sendUpResponseReply(event, 'Thank you for contributing!');
+    disableAddButton(responseIndex.valueOf() - 1);
+    closeForm(currentFormID.valueOf() - 1);
 }
 
 function addDomain(searchQuery, clientDomain) {
@@ -261,7 +262,8 @@ function onMessageReceived(payload) {
 
 function openForm(id, searchRequest) {
 
-    disableAddButton(responseIndex.valueOf() - 1);
+    //disableAddButton(responseIndex.valueOf() - 1);
+    closeForm(currentFormID.valueOf() -1 );
     drawHTMLForm(searchRequest);
 }
 
