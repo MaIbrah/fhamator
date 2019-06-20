@@ -38,7 +38,11 @@
       <version>${spring.version}</version>
     </dependency>
 
-
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -49,6 +53,28 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
       <version>${spring.version}</version>
+    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>io.jsonwebtoken</groupId>-->
+      <!--<artifactId>jjwt-api</artifactId>-->
+      <!--<version>0.10.5</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>io.jsonwebtoken</groupId>-->
+      <!--<artifactId>jjwt-impl</artifactId>-->
+      <!--<version>0.10.5</version>-->
+      <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>io.jsonwebtoken</groupId>-->
+      <!--<artifactId>jjwt-jackson</artifactId>-->
+      <!--<version>0.10.5</version>-->
+      <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>3.8.0</version>
     </dependency>
 
     <dependency>

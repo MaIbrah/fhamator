@@ -10,7 +10,10 @@ public class ChatMessage {
         CHAT,
         JOIN,
         LEAVE,
-        ADD_DOMAIN
+        ADD_DOMAIN,
+        TYPING,
+        QUESTION,
+        RESPONSE;
     }
 
     public MessageType getType() {

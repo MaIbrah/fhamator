@@ -7,7 +7,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sqli.chatUI.enums.ResponseCode;
@@ -54,7 +53,7 @@ public class ChatController {
         }
         else{
             message.setContent(returnedMessage);
-            message.setType(ChatMessage.MessageType.CHAT);
+            message.setType(ChatMessage.MessageType.RESPONSE);
         }
         message.setSender("BOT");
         messagingTemplate.convertAndSend("/topic/"+chatMessage.getSender(),message);

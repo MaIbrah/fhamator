@@ -51,7 +51,7 @@ public class UIController {
     private InfoService infoService;
 
     /* Hidden Methodes that should not be displayed in swagger */
-    @ApiOperation(value = "Load Insert page", hidden = true)
+  /*  @ApiOperation(value = "Load Insert page", hidden = true)
     @GetMapping("/InsertPage")
     public ModelAndView save() {
         return new ModelAndView("insertInformation");
@@ -155,5 +155,5 @@ public class UIController {
 
         return IntStream.range(0, keys.size())
             .collect(LinkedHashMap::new, (map, iterator) -> map.put(keys.get(iterator), values.get(iterator)), Map::putAll);
-    }
+    }*/
 }
