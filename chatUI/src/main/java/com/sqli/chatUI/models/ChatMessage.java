@@ -5,6 +5,7 @@ public class ChatMessage {
     private MessageType type;
     private String content;
     private String sender;
+    private String bearerHeader;
 
     public enum MessageType {
         CHAT,
@@ -39,11 +40,21 @@ public class ChatMessage {
     public void setSender(String sender) {
         this.sender = sender;
     }
+
+    public String getBearerHeader() {
+        return bearerHeader;
+    }
+
+    public void setBearerHeader(String bearerHeader) {
+        this.bearerHeader = bearerHeader;
+    }
+
     public ChatMessage(){}
     public ChatMessage(String message)
     {
         this.content = message;
         this.sender = "";
         this.type = MessageType.CHAT;
+        this.bearerHeader = "";
     }
 }

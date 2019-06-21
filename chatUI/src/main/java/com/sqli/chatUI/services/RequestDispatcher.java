@@ -31,7 +31,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
     @Autowired
     private StackOverFlowService stackOverFlowService;
 
-    public String requestDispatcher(String request) {
+    public String requestDispatcher(String request,String bearerToken) {
 
         if (request.toLowerCase().contains("help")) {
             return "help infos";
@@ -39,14 +39,14 @@ public class RequestDispatcher implements RequestDispatcherInter {
             SearchRequest searchRequest;
             SearchInformationRequestImpl searchInformationRequest = new SearchInformationRequestImpl();
             try {
-                searchRequest = searchInformationRequest.InformationRequestParser(request).get();
+                searchRequest = searchInformationRequest.InformationRequestParser(request,bearerToken).get();
                 if (Domains.STACKOVERFLOW.toString().equalsIgnoreCase(searchRequest.getDomain())) {
                     return new JSONObject("{'STACKOVERFLOW':"+searchQuestion(request)+"}").toString();
                 } else if ("none".equalsIgnoreCase(searchRequest.getDomain())
                     || searchRequest.getKeyword().contains("none")) {
                     return ResponseCode.NO_DOMAIN_FOUND.getValue();
                 } else {
-                    return new JSONObject("{\"FORMATION\":"+getResponse(searchRequest)+"}").toString();
+                    return new JSONObject("{\"FORMATION\":"+getResponse(searchRequest,bearerToken)+"}").toString();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -60,10 +60,10 @@ public class RequestDispatcher implements RequestDispatcherInter {
         return new JSONArray(questions);
     }
 
-    private JSONArray getResponse(SearchRequest searchRequest) {
+    private JSONArray getResponse(SearchRequest searchRequest, String token) {
         if (!searchRequest.getKeyword().contains("None")) {
             if (FORMATION.toString().equalsIgnoreCase(searchRequest.getDomain())) {
-                List<Information> informations = getByTypeAndKeywords(searchRequest.getDomain(), String.join(" ", searchRequest.getKeyword()));
+                List<Information> informations = getByTypeAndKeywords(searchRequest.getDomain(), String.join(" ", searchRequest.getKeyword()),token);
                 if (searchRequest.getKeyword().contains("next")) {
                     final LocalDateTime startDate = LocalDateTime.now();
                     final LocalDateTime endDate = startDate.plusWeeks(1);
@@ -76,7 +76,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
                 }
                 return new JSONArray(informations);
             }
-            return new JSONArray(getResponseByTypeAndKeyWords(searchRequest));
+            return new JSONArray(getResponseByTypeAndKeyWords(searchRequest, token));
         }
         return new JSONArray(NO_DATA_FOUND);
     }
@@ -91,29 +91,29 @@ public class RequestDispatcher implements RequestDispatcherInter {
         }).collect(Collectors.toList());
     }
 
-    private List<Information> getResponseByTypeAndKeyWords(SearchRequest searchRequest) {
-        List<Information> informations = getByTypeAndKeywords(searchRequest.getDomain(), String.join(" ", searchRequest.getKeyword()));
+    private List<Information> getResponseByTypeAndKeyWords(SearchRequest searchRequest , String token ) {
+        List<Information> informations = getByTypeAndKeywords(searchRequest.getDomain(), String.join(" ", searchRequest.getKeyword()),token);
         return informations;
     }
 
 
-    private List<Information> getAll() {
-        return informationService.getInformation();
+    private List<Information> getAll(String token) {
+        return informationService.getInformation(token);
     }
 
-    private List<Information> getByName(String name) {
-        return informationService.getInformationByName(name);
+    private List<Information> getByName(String name,String token) {
+        return informationService.getInformationByName(name, token);
     }
 
-    private List<Information> getByValues(String values) {
-        return informationService.getInformationByValues(values);
+    private List<Information> getByValues(String values, String token) {
+        return informationService.getInformationByValues(values, token);
     }
 
-    private List<Information> getByTypeAndKeywords(String type, String keywords) {
-        return informationService.getInformationByTypeAndkeywords(type, keywords);
+    private List<Information> getByTypeAndKeywords(String type, String keywords , String token) {
+        return informationService.getInformationByTypeAndkeywords(type, keywords, token);
     }
 
-    private List<Information> getByTypeAndName(String type, String name) {
-        return informationService.getInformationByTypeAndName(type, name);
+    private List<Information> getByTypeAndName(String type, String name , String token) {
+        return informationService.getInformationByTypeAndName(type, name, token);
     }
 }

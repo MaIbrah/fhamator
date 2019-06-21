@@ -41,7 +41,7 @@ public class ChatController {
         log.info("User " + chatMessage.getSender() +" has sent a message with the following content : " + chatMessage.getContent());
         Thread.sleep(Long.parseLong("100"));
         ChatMessage message = new ChatMessage();
-        String returnedMessage =returnMessage(chatMessage.getContent());
+        String returnedMessage =returnMessage(chatMessage.getContent(),chatMessage.getBearerHeader());
 
         if (ResponseCode.NO_DOMAIN_FOUND.getValue().equalsIgnoreCase(returnedMessage)){
             message.setContent(chatMessage.getContent());
@@ -56,6 +56,7 @@ public class ChatController {
             message.setType(ChatMessage.MessageType.RESPONSE);
         }
         message.setSender("BOT");
+        message.setBearerHeader("");
         messagingTemplate.convertAndSend("/topic/"+chatMessage.getSender(),message);
         log.info("User " + chatMessage.getSender() +" has been answered for his demand");
         return chatMessage;
@@ -74,9 +75,9 @@ public class ChatController {
     }*/
 
 
-    private String returnMessage(String text)
+    private String returnMessage(String text, String token)
     {
-        return requestDispatcher.requestDispatcher(text);
+        return requestDispatcher.requestDispatcher(text,token);
     }
 
 
