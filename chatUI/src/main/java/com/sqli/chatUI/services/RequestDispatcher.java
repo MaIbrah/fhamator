@@ -41,7 +41,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
             try {
                 searchRequest = searchInformationRequest.InformationRequestParser(request,bearerToken).get();
                 if (Domains.STACKOVERFLOW.toString().equalsIgnoreCase(searchRequest.getDomain())) {
-                    return new JSONObject("{'STACKOVERFLOW':"+searchQuestion(request)+"}").toString();
+                    return new JSONObject("{'STACKOVERFLOW':"+searchQuestion(request,bearerToken)+"}").toString();
                 } else if ("none".equalsIgnoreCase(searchRequest.getDomain())
                     || searchRequest.getKeyword().contains("none")) {
                     return ResponseCode.NO_DOMAIN_FOUND.getValue();
@@ -55,8 +55,8 @@ public class RequestDispatcher implements RequestDispatcherInter {
         return ResponseCode.NO_DATA_FOUND.getValue();
     }
 
-    private JSONArray searchQuestion(String request){
-        List<Question> questions = stackOverFlowService.getQuestions(request);
+    private JSONArray searchQuestion(String request, String token){
+        List<Question> questions = stackOverFlowService.getQuestions(request,token);
         return new JSONArray(questions);
     }
 
