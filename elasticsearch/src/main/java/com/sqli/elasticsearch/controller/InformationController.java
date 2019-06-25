@@ -1,6 +1,7 @@
 package com.sqli.elasticsearch.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +37,13 @@ public class InformationController {
 
     @PutMapping("/update")
     public InformationElasticSearch updateInformation(@RequestBody HashMap<String, Object> params) {
-        List<String> keyWords = (ArrayList<String>) params.get("keyWords");
+        List<String> keyWords;
+        try {
+            keyWords = (ArrayList<String>) params.get("keyWords");
+        }
+        catch (Exception e){
+            keyWords = Arrays.asList((String)params.get("keyWords"));
+        }
         Optional<InformationElasticSearch> informationElasticSearch = repository.findById(params.get("id").toString());
         if (informationElasticSearch.isPresent()) {
             if (informationElasticSearch.get().getKeyWords() == null) {
@@ -79,14 +86,14 @@ public class InformationController {
     @GetMapping("/getMatches/{values}")
     public List<Information> getByNames(@PathVariable String values) {
         List<Information> informations = new ArrayList<>();
-        for (InformationElasticSearch infoelastic : repository.listinformationMatches(values)) {
-            informations.add(InformationCoverter.convertToInformation(infoelastic));
+        for (InformationElasticSearch infoElastic : repository.listinformationMatches(values)) {
+            informations.add(InformationCoverter.convertToInformation(infoElastic));
         }
         return informations;
 
     }
 
-    @GetMapping("/getMatches/test/{values}")
+    @GetMapping("/test/{values}")
     public List<InformationElasticSearch> getByNamesTest(@PathVariable String values) {
         return repository.listinformationMatches(values);
 
