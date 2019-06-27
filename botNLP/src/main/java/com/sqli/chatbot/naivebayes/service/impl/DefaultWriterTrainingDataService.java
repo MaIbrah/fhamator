@@ -5,7 +5,9 @@ import static com.sqli.chatbot.naivebayes.util.opennlp.OpenNLPCore.generateModel
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,15 +50,38 @@ public class DefaultWriterTrainingDataService implements WriterTrainingDataServi
     public String writeKeywordIfDoesntExist(NoExistKeywordRequest request) throws IOException {
         //File file = null;
         DomainOrKeywordWriter domainOrKeywordWriter = new DomainOrKeywordWriter();
-        List<String> keywords = Arrays.asList(request.getClientKeywords().trim().split(","));
+        List<String> keywords = request.getClientKeywords();
+        //Arrays.asList(request.getClientKeywords().trim().split(","));
         for (String keyword : keywords) {
             String keywordFinder = keywordService.getMostPredicatedKeywordFromSearchQuery(keyword);
             if (keywordFinder.toLowerCase().contains("none")) {
-                domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_KEYWORD_FILE_PATH, keyword + " " + keyword);
+
+                domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_KEYWORD_FILE_PATH, keyword + " " + shuffledKeywords(keyword,10));
             }
 
         }
         generateModel(Constant.TRAINING_KEYWORD_FILE_PATH, Constant.TRAINING_KEYWORD_MODEL_PATH);
         return String.join(" ", keywords);
     }
+
+private String shuffleKeyWord(String keyWord){
+    List<Character> strs = new ArrayList<>();
+    char[] x=keyWord.toCharArray();
+        for (char c : x) {
+        strs.add(c);
+    }
+        Collections.shuffle(strs);
+    return strs.stream()
+        .map(String::valueOf)
+        .collect(Collectors.joining());
+    }
+
+
+    private String shuffledKeywords(String keyWord , int numberOfShuffle){
+        StringBuilder keyWords = new StringBuilder().append(keyWord);
+        while (numberOfShuffle-- > 0)
+            keyWords.append(" ").append(shuffleKeyWord(keyWord));
+        return keyWords.toString();
+    }
+
 }

@@ -3,20 +3,20 @@ package com.sqli.chatbot.naivebayes.util.dto;
 import java.util.List;
 
 public class NoExistKeywordRequest {
-    private String clientKeywords;
+    private List<String> clientKeywords;
 
-    public NoExistKeywordRequest(String clientKeywords) {
+    public NoExistKeywordRequest(List<String> clientKeywords) {
         this.clientKeywords = clientKeywords;
     }
 
     public NoExistKeywordRequest() {
     }
 
-    public String getClientKeywords() {
+    public List<String> getClientKeywords() {
         return clientKeywords;
     }
 
-    public void setClientKeywords(String clientKeywords) {
+    public void setClientKeywords(List<String> clientKeywords) {
         this.clientKeywords = clientKeywords;
     }
 }

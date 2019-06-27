@@ -7,6 +7,7 @@ import opennlp.tools.doccat.*;
 import opennlp.tools.ml.AbstractTrainer;
 import opennlp.tools.util.*;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -14,7 +15,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class OpenNLPCore implements OpenNLPService {
@@ -98,21 +103,24 @@ public class OpenNLPCore implements OpenNLPService {
         int i = 0;
         List<String> results = new ArrayList<>();
         double[] probs = new double[doccat.getNumberOfCategories()];
-        for (int j = 0; j < doccat.getNumberOfCategories(); j++) {
+    /*    for (int j = 0; j < doccat.getNumberOfCategories(); j++) {
             probs[j] = 0;
-        }
-        double seuil = (1.0 / (doccat.getNumberOfCategories() * 2));
+        }*/
+        double seuil = (1.0 / (doccat.getNumberOfCategories()));
         for (double prob : aProbs) {
-
+            System.out.println("seuil :"+seuil+" keyword : "+doccat.getCategory(i)+" prob : "+prob);
             if (prob > seuil) {
-                for (int j = 0; j < doccat.getNumberOfCategories(); j++) {
+                /*for (int j = 0; j < doccat.getNumberOfCategories(); j++) {
                     probs[j] = 0;
-                }
-                probs[i] = prob;
+                }*/
+                /*probs[i] = prob;
                 String keyword = doccat.getBestCategory(probs);
+
                 if (!results.contains(keyword)) {
                     results.add(keyword);
-                }
+                }*/
+
+                results.add(doccat.getCategory(i));
             }
             i++;
         }
@@ -151,4 +159,6 @@ public DoccatModel loadOrGenerateModel(String training_file_path, String trainin
         }
         return max;
     }
+
+
 }
