@@ -21,7 +21,7 @@ public class SearchInformationRequestImpl implements SearchInformationRequest {
         if (!request.isEmpty()) {
             try {
                 RestTemplate restTemplate = new RestTemplate();
-                String url = URL + "/api/naivesBayes/domain/" + request;
+                String url = URL + "/api/naivesBayes/test/" + request;
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 headers.set("Authorization", token);

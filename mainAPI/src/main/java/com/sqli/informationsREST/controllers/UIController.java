@@ -1,39 +1,13 @@
 package com.sqli.informationsREST.controllers;
 
-import static com.sqli.informationsREST.utils.UtilsFunctions.ELASTIC_SEARCH_LINK;
-import static com.sqli.informationsREST.utils.UtilsFunctions.requestExecute;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.sqli.informationsREST.models.Information;
 import com.sqli.informationsREST.repositories.InfoRepository;
 import com.sqli.informationsREST.services.InfoService;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 @Controller
 @Api(value = "CRUD for webPages", hidden = true)

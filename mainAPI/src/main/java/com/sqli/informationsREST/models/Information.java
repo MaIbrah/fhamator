@@ -10,10 +10,10 @@ import org.springframework.data.annotation.Id;
 
 public class Information implements Serializable {
     @Id
-    public ObjectId _id;
-    public String type;
-    public String name;
-    public Map<String,String> attributes;
+    private ObjectId _id;
+    private String type;
+    private String name;
+    private Map<String,String> attributes;
 
     public String get_id() { return String.valueOf(_id); }
 

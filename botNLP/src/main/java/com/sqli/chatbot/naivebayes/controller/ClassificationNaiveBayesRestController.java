@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesDomainService;
 import com.sqli.chatbot.naivebayes.service.ClassificationNaiveBayesKeywordService;
 import com.sqli.chatbot.naivebayes.service.WriterTrainingDataService;
+import com.sqli.chatbot.naivebayes.util.dto.Entity;
 import com.sqli.chatbot.naivebayes.util.dto.NoExistDomainRequest;
 import com.sqli.chatbot.naivebayes.util.dto.NoExistKeywordRequest;
+import com.sqli.chatbot.naivebayes.util.dto.Reponse;
 import com.sqli.chatbot.naivebayes.util.dto.SearchQueryResponse;
+import com.sqli.chatbot.naivebayes.util.factory.ResponseFactory;
 import com.sqli.chatbot.naivebayes.util.factory.SearchQueryResponseFactory;
 
 @RestController
@@ -44,6 +47,18 @@ public class ClassificationNaiveBayesRestController {
             else  keywords  = keywordService.getKeywordsFromSearchQuery(request);
 
             return ResponseEntity.ok(SearchQueryResponseFactory.createSearchQueryResponse(domain, keywords));
+        } catch (IOException ex) {
+            return ResponseEntity.status(301).build();
+        }
+    }
+    @GetMapping(value = "/test/{query}")
+    private ResponseEntity<Reponse> testingNewThings(@PathVariable("query") String request) {
+        try {
+            request = request.toLowerCase();
+            List<Entity> domains = domainService.getDomainEntities(request);
+            List<Entity> keywords = keywordService.getKeywordsEntities(request);
+            return ResponseEntity.ok(ResponseFactory.reponseMaker(request,domains,keywords));
+
         } catch (IOException ex) {
             return ResponseEntity.status(301).build();
         }

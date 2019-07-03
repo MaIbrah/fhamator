@@ -13,7 +13,8 @@ public class OpenNlpResponse {
     }
 
     public String getPredicatedResponse() {
-        return predicatedResponse;
+//        return predicatedResponse ;
+        return prob > 0.7 ? predicatedResponse : "";
     }
 
     public void setPredicatedResponse(String predicatedResponse) {

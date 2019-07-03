@@ -53,7 +53,7 @@ public class DefaultWriterTrainingDataService implements WriterTrainingDataServi
         List<String> keywords = request.getClientKeywords();
         //Arrays.asList(request.getClientKeywords().trim().split(","));
         for (String keyword : keywords) {
-            String keywordFinder = keywordService.getMostPredicatedKeywordFromSearchQuery(keyword);
+            String keywordFinder = keywordService.getMostPredicatedKeywordToAdd(keyword);
             if (keywordFinder.toLowerCase().contains("none")) {
 
                 domainOrKeywordWriter.writeInFileDomainOrKeyword(Constant.TRAINING_KEYWORD_FILE_PATH, keyword + " " + shuffledKeywords(keyword,10));
