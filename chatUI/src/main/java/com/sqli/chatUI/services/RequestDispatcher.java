@@ -1,7 +1,5 @@
 package com.sqli.chatUI.services;
 
-import static com.sqli.chatUI.enums.Domains.FORMATION;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -12,7 +10,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sqli.chatUI.enums.Domains;
 import com.sqli.chatUI.enums.ResponseCode;
 import com.sqli.chatUI.models.Information;
 import com.sqli.chatUI.models.SearchRequest;
@@ -29,7 +26,7 @@ public class RequestDispatcher implements RequestDispatcherInter {
     @Autowired
     private StackOverFlowService stackOverFlowService;
 
-    public String requestDispatcher(String request, String bearerToken) {
+    public String requestDispatcher(String request, String bearerToken, String sender) {
 
         if (request.toLowerCase().contains("help")) {
             return "help infos";
@@ -38,18 +35,8 @@ public class RequestDispatcher implements RequestDispatcherInter {
             SearchInformationRequestImpl searchInformationRequest = new SearchInformationRequestImpl();
             try {
                 searchRequest = searchInformationRequest.InformationRequestParser(request, bearerToken).get();
-//                if ("none".equalsIgnoreCase(searchRequest.getDomain())
-//                    || searchRequest.getKeyword().contains("none")) {
-//                    return ResponseCode.NO_DOMAIN_FOUND.getValue();
-//                } else {
-//                    return new JSONObject("{\"FORMATION\":" + getResponse(searchRequest, bearerToken) + "}").toString();
-//                }
-                if (!searchRequest.getPossibleDomains().isEmpty()) {
-                    if (!searchRequest.getPossibleKeywords().isEmpty() && searchRequest.getPossibleDomains().size() == 1 ) {
-                        return new JSONObject("{INFORMATION :" + getResponse(searchRequest, bearerToken) + "}").toString();
-                    } else {
-                        return new JSONObject("{DOMAINS : " + new JSONArray(searchRequest.getPossibleDomains()).toString() + "}").toString();
-                    }
+                if (!searchRequest.getPossibleDomains().isEmpty() || "none".equalsIgnoreCase(searchRequest.getBestDomainFound().getIntent())) {
+                    return getTheBestAnswer(bearerToken, sender, searchRequest);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -58,33 +45,37 @@ public class RequestDispatcher implements RequestDispatcherInter {
         return ResponseCode.NO_DATA_FOUND.getValue();
     }
 
+    private String getTheBestAnswer(String bearerToken, String sender, SearchRequest searchRequest) {
+        String returnedValue;
+        if ("greetings".equalsIgnoreCase(searchRequest.getBestDomainFound().getIntent())) {
+            String greetings = "\"Greetings " + sender + ", Hi, FHAMATOR Greets You!\" ";
+            returnedValue = new JSONObject("{GREETINGS :" + greetings + "}").toString();
+        } else {
+            if ("whereabouts".equalsIgnoreCase(searchRequest.getBestDomainFound().getIntent())) {
+                returnedValue =
+                    new JSONObject("{WHEREABOUTS : \"I'm fine, thank you, but could you please state your request instead of chit-chatting!!\" }").toString();
+            } else {
+                if ("goodbye".equalsIgnoreCase(searchRequest.getBestDomainFound().getIntent())) {
+                    returnedValue = new JSONObject("{GOODBYE : 'The user attempted to logout'}").toString();
+                } else {
+                    if ((!searchRequest.getPossibleKeywords().isEmpty()) && searchRequest.getPossibleDomains().size() == 1) {
+                        returnedValue = new JSONObject("{INFORMATION :" + getResponse(searchRequest, bearerToken) + "}").toString();
+                    } else {
+                        returnedValue = new JSONObject("{DOMAINS : " + new JSONArray(searchRequest.getPossibleDomains()).toString() + "}").toString();
+                    }
+                }
+            }
+        }
+        return returnedValue;
+    }
+
     private JSONArray searchQuestion(String request, String token) {
         List<Question> questions = stackOverFlowService.getQuestions(request, token);
         return new JSONArray(questions);
     }
 
     private JSONArray getResponse(SearchRequest searchRequest, String token) {
-//        if (!searchRequest.getKeyword().contains("None")) {
-//            if (FORMATION.toString().equalsIgnoreCase(searchRequest.getDomain())) {
-//                List<Information> informations = getByTypeAndKeywords(searchRequest.getBestDomainFound(), String.join(" ", searchRequest.getKeyword()),
-//                token);
-//                if (searchRequest.getKeyword().contains("next")) {
-//                    final LocalDateTime startDate = LocalDateTime.now();
-//                    final LocalDateTime endDate = startDate.plusWeeks(1);
-//                    informations = filterByStartAndEndDate(informations, startDate, endDate);
-//                }
-//                if (searchRequest.getKeyword().contains("previous")) {
-//                    final LocalDateTime endDate = LocalDateTime.now();
-//                    final LocalDateTime startDate = endDate.minusWeeks(1);
-//                    informations = filterByStartAndEndDate(informations, startDate, endDate);
-//                }
-//                return new JSONArray(informations);
-//            }
-//            return new JSONArray(getResponseByTypeAndKeyWords(searchRequest, token));
-//        }
-//        if (!searchRequest.getPossibleKeywords().isEmpty())
         return new JSONArray(getResponseByTypeAndKeyWords(searchRequest, token));
-//        return new JSONArray(searchRequest.getPossibleDomains());
     }
 
     private List<Information> filterByStartAndEndDate(final List<Information> informations, final LocalDateTime startDate, final LocalDateTime endDate) {

@@ -57,7 +57,7 @@ public class ClassificationNaiveBayesRestController {
             request = request.toLowerCase();
             List<Entity> domains = domainService.getDomainEntities(request);
             List<Entity> keywords = keywordService.getKeywordsEntities(request);
-            return ResponseEntity.ok(ResponseFactory.reponseMaker(request,domains,keywords));
+            return ResponseEntity.ok(ResponseFactory.responseMaker(request,domains,keywords));
 
         } catch (IOException ex) {
             return ResponseEntity.status(301).build();

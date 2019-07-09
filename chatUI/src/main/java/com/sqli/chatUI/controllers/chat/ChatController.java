@@ -41,7 +41,7 @@ public class ChatController {
         log.info("User " + chatMessage.getSender() +" has sent a message with the following content : " + chatMessage.getContent());
         Thread.sleep(Long.parseLong("100"));
         ChatMessage message = new ChatMessage();
-        String returnedMessage =returnMessage(chatMessage.getContent(),chatMessage.getBearerHeader());
+        String returnedMessage =returnMessage(chatMessage);
 
         if (ResponseCode.NO_DOMAIN_FOUND.getValue().equalsIgnoreCase(returnedMessage)){
             message.setContent(chatMessage.getContent());
@@ -75,10 +75,7 @@ public class ChatController {
     }*/
 
 
-    private String returnMessage(String text, String token)
-    {
-        return requestDispatcher.requestDispatcher(text,token);
-    }
+    private String returnMessage(ChatMessage chatMessage) { return requestDispatcher.requestDispatcher(chatMessage.getContent(), chatMessage.getBearerHeader(), chatMessage.getSender()); }
 
 
 }

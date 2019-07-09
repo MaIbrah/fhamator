@@ -106,7 +106,7 @@ public class OpenNLPCore implements OpenNLPService {
         }*/
         double seuil = (1.0 / (doccat.getNumberOfCategories()));
         for (double prob : aProbs) {
-            System.out.println("seuil :" + seuil + " keyword : " + doccat.getCategory(i) + " prob : " + prob);
+//            System.out.println("seuil :" + seuil + " keyword : " + doccat.getCategory(i) + " prob : " + prob);
             if (prob > seuil) {
                 /*for (int j = 0; j < doccat.getNumberOfCategories(); j++) {
                     probs[j] = 0;
@@ -128,7 +128,7 @@ public class OpenNLPCore implements OpenNLPService {
 
     private List<Entity> getEntityFromASearchQuery(DoccatModel model, String searchQuery) {
         DocumentCategorizer doccat = new DocumentCategorizerME(model);
-        double seuil = ((double) 1 / doccat.getNumberOfCategories()) * 2 ;
+        double seuil = ((double) 1 / doccat.getNumberOfCategories()) * 2.5 ;
         return getEntities(model, searchQuery, seuil);
     }
     private List<Entity> getEntityFromASearchQuery(DoccatModel model, String searchQuery, double seuil) {
