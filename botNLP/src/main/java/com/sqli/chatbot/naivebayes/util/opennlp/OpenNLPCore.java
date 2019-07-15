@@ -142,7 +142,7 @@ public class OpenNLPCore implements OpenNLPService {
         int i = 0;
         List<Entity> results = new ArrayList<>();
         for (double prob : aProbs) {
-//            System.out.println("seuil :" + seuil + " keyword : " + doccat.getCategory(i) + " prob : " + prob);
+            System.out.println("seuil :" + seuil + " keyword : " + doccat.getCategory(i) + " prob : " + prob);
             if (prob > seuil) {
                 results.add(new Entity(doccat.getCategory(i), prob));
             }

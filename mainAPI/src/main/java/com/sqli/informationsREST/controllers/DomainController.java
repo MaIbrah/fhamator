@@ -27,9 +27,8 @@ public class DomainController {
         return ResponseEntity.ok(domains);
     }
     @PostMapping("/domains")
-    private ResponseEntity<String> addNewDomain(@RequestBody List<Domain> domains)
-    {
-       domains.forEach( domain -> domainRepo.save(domain));
+    private ResponseEntity<String> addNewDomain(@RequestBody List<Domain> domains) {
+       domains.forEach(domain -> domainRepo.save(domain));
         return ResponseEntity.ok("You have added successfully new domains");
     }
 }
