@@ -18,7 +18,7 @@ public class Information implements Serializable {
     public String get_id() { return String.valueOf(_id); }
 
     public void set_id(String _id) {
-        this._id = new ObjectId(_id);
+        if(ObjectId.isValid(_id)) this._id = new ObjectId(_id);
     }
 
     public String getType() {

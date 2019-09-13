@@ -4,11 +4,17 @@ import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Information {
-@Id
+    @JsonProperty
+    @Id
     public String _id;
+    @JsonProperty
     private String type;
+    @JsonProperty
     private String name;
+    @JsonProperty
     private Map<String,String> attributes;
 
 

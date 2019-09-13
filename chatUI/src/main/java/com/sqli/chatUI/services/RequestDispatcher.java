@@ -58,10 +58,18 @@ public class RequestDispatcher implements RequestDispatcherInter {
                 if ("goodbye".equalsIgnoreCase(searchRequest.getBestDomainFound().getIntent())) {
                     returnedValue = new JSONObject("{GOODBYE : 'The user attempted to logout'}").toString();
                 } else {
-                    if ((!searchRequest.getPossibleKeywords().isEmpty()) && searchRequest.getPossibleDomains().size() == 1) {
-                        returnedValue = new JSONObject("{INFORMATION :" + getResponse(searchRequest, bearerToken) + "}").toString();
+                    if ("thanks".equalsIgnoreCase(searchRequest.getBestDomainFound().getIntent())) {
+                        returnedValue = new JSONObject("{THANKS : \"You're always welcome!\"}").toString();
                     } else {
-                        returnedValue = new JSONObject("{DOMAINS : " + new JSONArray(searchRequest.getPossibleDomains()).toString() + "}").toString();
+                        if ("action".equalsIgnoreCase(searchRequest.getBestDomainFound().getIntent())) {
+                            returnedValue = new JSONObject("{ACTION : \"You're account was created!! Email is userSQLI2019@gmail.com and the Password is userpassword \"}").toString();
+                        } else {
+                            if ((!searchRequest.getPossibleKeywords().isEmpty()) && searchRequest.getPossibleDomains().size() == 1) {
+                                returnedValue = new JSONObject("{INFORMATION :" + getResponse(searchRequest, bearerToken) + "}").toString();
+                            } else {
+                                returnedValue = new JSONObject("{DOMAINS : " + new JSONArray(searchRequest.getPossibleDomains()).toString() + "}").toString();
+                            }
+                        }
                     }
                 }
             }

@@ -10,10 +10,18 @@ health-check status
 health-check prob
 health-check server
 greetings hello hi hey yo salam aloha hola salamo alaykom salut bonjour bonsoir morning night wafin wech wesh
-whereabouts how are you?
+whereabouts are you?
 whereabouts cava? cv labass cava ca va
 whereabouts whats up? how is it going? what is up? wach kidayr hani
 goodbye bye peace shutdown die
 formation i want to know about clean code
 whereabouts sup ?
 formation php
+first_domain trying to confuse the chatbot by giving a sentence that can be mapped to two domains but has a single key word which is html
+second_domain trying to confuse the chatbot by giving a sentence that can be mapped to two domains but has a single key word which is html
+first_domain trying to confuse the chatbot by giving a sentence that can be mapped to two domains but has a single key word
+thanks thanks
+thanks thank you
+formation unkown request 
+formation unkown request
+action create a test account NCS-MOBILE.customer.com/create
